@@ -361,8 +361,7 @@ def generate():
             pin2 = int(pin2) 
             print(pin2) 
 
-            if int(pin) == pin2: 
-                messagebox.showinfo("pin is correct") 
+            if int(pin) == pin2:
                 messagebox.showinfo("Success", "Pin is correct") 
                 length = int(length_entry.get()) 
                 letters = string.ascii_letters 
@@ -379,7 +378,11 @@ def generate():
                 pwd = "" 
                 meets_criteria = False 
                 has_number = False 
-                has_special = False 
+                has_special = False
+
+                if length < 8:
+                    messagebox.showerror("Error", "Length has to be greater than 8")
+                    return
 
                 # Generate password meeting specified criteria 
                 while not meets_criteria or len(pwd) < length: 
@@ -600,7 +603,8 @@ def register():
         return 
     
     if not(len(MPassword) > 7): 
-        messagebox.showerror("Error", "Password must have 7 or more characters") 
+        messagebox.showerror("Error", "Password must have 7 or more characters")
+        return
     if ConfirmMPassword != MPassword: 
         messagebox.showerror("Error", "Passwords do not match") 
         return 
@@ -663,7 +667,8 @@ def login():
             return 
 
         if count==0: 
-            messagebox.showerror("Error", "No more tries left") 
+            messagebox.showerror("Error", "No more tries left")
+            login_frame.grid_forget()
  
 # Function to switch to main frame after successful login 
 def main(username): 
@@ -700,7 +705,7 @@ Rusername_entry.grid(row=0, column=1, padx=5, pady=5)
  
 RMpassword_label = tk.Label(register_frame, text="Master Password:") 
 RMpassword_label.grid(row=1, column=0, padx=5, pady=5) 
-RMpassword_entry = tk.Entry(register_frame, show = "*") 
+RMpassword_entry = tk.Entry(register_frame, show="*")
 RMpassword_entry.grid(row=1, column=1, padx=5, pady=5) 
  
 Rconfirm_passord_label = tk.Label(register_frame, text="Confirm Master Password:") 
