@@ -58,7 +58,16 @@ def gologin():
     global count 
     count = 3 
     login_frame.grid() 
- 
+
+#function to go back to the login or register option from the login window
+def gobacklogin():
+    login_frame.grid_forget()
+    LorR_frame.grid()
+
+#function to go back to the login or register option from the login window
+def gobackregister():
+    register_frame.grid_forget()
+    LorR_frame.grid()
 
 # Function to switch to register frame 
 def goregister(): 
@@ -550,7 +559,7 @@ def deleteP():
 
             if pin2 is None: 
                 messagebox.showerror("pin is incorrect") 
-                count=count-1 
+                count = count-1
                 Dtries_label.config(text="You have " + str(count) + " chances left") 
                 if count==0: 
                     messagebox.showerror("you have no more chances left") 
@@ -716,7 +725,10 @@ Rhint_entry.grid(row=5, column=1, padx=5, pady=5)
 
 # Add register button 
 register_button = tk.Button(register_frame, text="Register", command=register) 
-register_button.grid(row=6, column=0, columnspan=2, padx=5, pady=5) 
+register_button.grid(row=6, column=0, columnspan=2, padx=5, pady=5)
+
+back_button = tk.Button(register_frame, text="Back", command=gobackregister)
+back_button.grid(row=6, column=1, columnspan=1, padx=3,)
  
 # Create login window 
 login_frame = tk.Frame(root) 
@@ -740,7 +752,10 @@ pin_entry = tk.Entry(login_frame, show="*")
 pin_entry.grid(row=2, column=1, padx=5, pady=5) 
  
 login_button = tk.Button(login_frame, text="Login", command=login) 
-login_button.grid(row=3, columnspan=2, padx=5, pady=5) 
+login_button.grid(row=3,column =0, columnspan=2, padx=5, pady=5)
+
+back_button = tk.Button(login_frame, text="Back", command=gobacklogin)
+back_button.grid(row=3, column=1, columnspan=1, padx=3,)
  
 tries_label = tk.Label(login_frame, text="") 
 tries_label.grid(row=4, columnspan=2) 
