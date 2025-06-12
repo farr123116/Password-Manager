@@ -172,18 +172,18 @@ def add():
         pincheck = cursor.execute(f"SELECT pins FROM MasterPasswords WHERE pins={pin}") 
         pin2 = pincheck.fetchone() 
         if pin2 is None: 
-            messagebox.showerror("pin is incorrect") 
+            messagebox.showerror("Pin","pin is incorrect")
             count=count-1 
             Atries_label.config(text="You have " + str(count) + " chances left") 
             
             if count==0: 
 
-                messagebox.showerror("you have no more chances left") 
+                messagebox.showerror("Count","you have no more chances left")
             pin2 = pin2[0] 
             pin2 = int(pin2) 
             print(pin2) 
             if int(pin) == pin2: 
-                messagebox.showinfo("pin is correct") 
+                messagebox.showinfo("Pin","pin is correct")
                 #gets the information typed into each entry and inserts ot into the Passwords table
                 website_name = AwebsiteName_entry.get() 
                 url = AwebsiteURL_entry.get() 
@@ -246,7 +246,7 @@ def delete():
         pin2 = pincheck.fetchone() 
             
         if pin2 is None: 
-            messagebox.showerror("pin is incorrect") 
+            messagebox.showerror("Pin","pin is incorrect")
             count=count-1 
             Dtries_label.config(text="You have " + str(count) + " chances left") 
                 
@@ -257,7 +257,7 @@ def delete():
             print(pin2) 
             
             if int(pin) == pin2: 
-                messagebox.showinfo("pin is correct") 
+                messagebox.showinfo("Pin","pin is correct")
             
             #searches through each catorgry the user can delete 
                 while True: 
@@ -268,14 +268,14 @@ def delete():
                         cursor.execute(f"SELECT * FROM Passwords WHERE {search}='{value}' AND pins={pin}") 
                         results= cursor.fetchall() 
                         print(results) 
-                        delete = messagebox.askyesno("is this the imformation you want to delete?") 
+                        delete = messagebox.askyesno("Delete","is this the imformation you want to delete?")
                         
                         if delete: 
                             cursor.execute(f"DELETE FROM Passwords WHERE {search}='{value}' AND pins={pin}") 
 
                         else: 
 
-                             messagebox.showinfo("you will go back to main page") 
+                             messagebox.showinfo("Main","you will go back to main page")
 
                              delete_frame.grid_forget()  
 
@@ -283,12 +283,12 @@ def delete():
 
                     else: 
 
-                        messagebox.showerror("you can only delete username, password, email, website name, website url") 
+                        messagebox.showerror("Error","you can only delete username, password, email, website name, website url")
 
                         continue 
 
     except: 
-            messagebox.showerror("pin is incorrect") 
+            messagebox.showerror("Pin","pin is incorrect")
             count=count-1 
             tries_label.config(text="You have "+ str(count)+ " tries left") 
             
@@ -304,16 +304,16 @@ def change():
             pin2 = pincheck.fetchone() 
             
             if pin2 is None: 
-                messagebox.showerror("pin is incorrect") 
+                messagebox.showerror("Pin","pin is incorrect")
                 count=count-1 
                 Ctries_label.config(text="You have " + str(count) + " chances left") 
                 if count==0: 
-                    messagebox.showerror("you have no more chances left") 
+                    messagebox.showerror("Count","you have no more chances left")
             pin2 = pin2[0] 
             pin2 = int(pin2) 
             print(pin2) 
             if int(pin) == pin2: 
-                messagebox.showinfo("pin is correct") 
+                messagebox.showinfo("Pin","pin is correct")
                 while True: 
                     search = Csearch_entry.get() 
                     value = Cvalue_entry.get() 
@@ -322,19 +322,19 @@ def change():
                         cursor.execute(f"SELECT * FROM Passwords WHERE {search}='{value}' AND pins={pin}") 
                         results= cursor.fetchall() 
                         print(results) 
-                        change = messagebox.askyesno("is this the imformation you want to change?") 
+                        change = messagebox.askyesno("Change","is this the imformation you want to change?")
                         if change == "yes": 
                             cursor.execute(f"UPDATE Passwords SET {search}='{value1}' WHERE {search}='{value}' AND pins={pin}") 
-                            messagebox.showinfo("information changed") 
+                            messagebox.showinfo("Change","information changed")
                             change_frame.grid_forget() 
                             main_frame.grid() 
 
                     else: 
-                        messagebox.showerror("you can only change username, password, email, website name, website url") 
+                        messagebox.showerror("Error","you can only change username, password, email, website name, website url")
                         continue 
 
     except: 
-        messagebox.showerror("pin is incorrect") 
+        messagebox.showerror("Pin","pin is incorrect")
         count=count-1 
         tries_label.config(text="You have "+ str(count)+ " tries left") 
 
@@ -350,12 +350,12 @@ def generate():
             pin2 = pincheck.fetchone() 
             
             if pin2 is None: 
-                messagebox.showerror("pin is incorrect") 
+                messagebox.showerror("Pin","pin is incorrect")
                 count=count-1 
                 Gtries_label.config(text="You have " + str(count) + " chances left") 
                 
                 if count==0: 
-                    messagebox.showerror("you have no more chances left") 
+                    messagebox.showerror("Count","you have no more chances left")
             
             pin2 = pin2[0] 
             pin2 = int(pin2) 
@@ -427,25 +427,25 @@ def generate():
 # Function to test password strength    
 def strength_test(): 
     global count 
-    try: 
-        pin = Spin_entry.get() 
-        pincheck = cursor.execute(f"SELECT pins FROM MasterPasswords WHERE pins={pin}") 
-        pin2 = pincheck.fetchone() 
+    try:
+        pin = Spin_entry.get()
+        pincheck = cursor.execute(f"SELECT pins FROM MasterPasswords WHERE pins={pin}")
+        pin2 = pincheck.fetchone()
 
-        if pin2 is None: 
-            messagebox.showerror("pin is incorrect") 
-            count=count-1 
-            Stries_label.config(text="You have " + str(count) + " chances left") 
+        if pin2 is None:
+            messagebox.showerror("Pin","pin is incorrect")
+            count = count - 1
+            Stries_label.config(text="You have " + str(count) + " chances left")
 
-            if count==0: 
-                messagebox.showerror("you have no more chances left") 
-           
-            pin2 = pin2[0] 
-            pin2 = int(pin2) 
-            print(pin2) 
+            if count == 0:
+                messagebox.showerror("Count","you have no more chances left")
 
-            if int(pin) == pin2: 
-                messagebox.showinfo("pin is correct") 
+        pin2 = pin2[0]
+        pin2 = int(pin2)
+        print(pin2)
+
+        if int(pin) == pin2:
+                messagebox.showinfo("Pin","pin is correct")
 
                 
                 pwd=pwd_entry.get() 
@@ -457,8 +457,8 @@ def strength_test():
                         if any(chr.isdigit() for chr in pwd)==True: 
                             #checks if the password has at least one special character 
                             if pwd.isalnum()==False: 
-                                messagebox.showinfo("Password strength: Strong") 
-                                add = messagebox.askyesno("do you want to add this password to your account yes or no") 
+                                messagebox.showinfo("valid Password","Password strength: Strong")
+                                add = messagebox.askyesno("Add","do you want to add this password to your account yes or no")
                                 if add == "yes": 
                                     addfrom(pwd,pin) 
                                     addfrom_frame.grid_forget() 
@@ -468,15 +468,14 @@ def strength_test():
                                     strength_frame.grid_forget() 
                                     main_frame.grid() 
                             else: 
-                                messagebox.showinfo("Password strength: Medium") 
-                                changepwd = messagebox.askyesno("would you like to change the password y/anything else") 
+                                messagebox.showinfo("Borderline Password","Password strength: Medium")
+                                changepwd = messagebox.askyesno("Change","would you like to change the password y/anything else")
                                     
                                 if changepwd=="yes": 
                                     return 
 
-                                else: 
-                                    messagebox.showinfo("Password strength: Strong") 
-                                    add = messagebox.askyesno("do you want to add this password to your account yes or no") 
+                                else:
+                                    add = messagebox.askyesno("Add","do you want to add this password to your account yes or no")
 
                                     if add == "yes": 
                                         addfrom(pwd,pin) 
@@ -489,16 +488,17 @@ def strength_test():
                                         main_frame.grid() 
 
                         else: 
-                            messagebox.showerror("Password strength: Weak. You need to make it stronger") 
+                            messagebox.showerror("Invalid Password", "Password strength: Weak. You need to make it stronger")
 
                     else: 
-                        messagebox.showerror("Password strength: very weak. You need to make it stronger")
+                        messagebox.showerror("Invalid Password", "Password strength: very weak. You need to make it stronger")
             
                 else: 
-                    messagebox.showerror("password too weak. Make a new one") 
+                    messagebox.showerror("Invalid Password","password too weak. Make a new one")
+
 
     except: 
-        messagebox.showerror("pin is incorrect") 
+        messagebox.showerror("Pin","pin is incorrect")
         count=count-1 
         tries_label.config(text="You have "+ str(count)+ " tries left") 
         if count==0: 
@@ -520,11 +520,11 @@ def viewP():
                         main_frame.grid()                         
 
                     else: 
-                        messagebox.showerror("you can only change username, password, email, website name, website url") 
+                        messagebox.showerror("Error","you can only change username, password, email, website name, website url")
                         continue 
 
     except: 
-        messagebox.showerror("something went wrong, please try again") 
+        messagebox.showerror("Error","something went wrong, please try again")
  
 #changes the profile details 
 def editP(): 
@@ -539,521 +539,522 @@ def editP():
                         results= cursor.fetchall() 
                         print(results) 
                         
-                        change = messagebox.askyesno("is this the imformation you want to change?") 
+                        change = messagebox.askyesno("Edit","is this the imformation you want to change?")
                         if change == "yes": 
                             cursor.execute(f"UPDATE Passwords SET {search}='{value1}' WHERE {search}='{value}'") 
-                            messagebox.showinfo("information changed") 
+                            messagebox.showinfo("Edit","information changed")
                             change_frame.grid_forget() 
                             main_frame.grid() 
 
                     else: 
-                        messagebox.showerror("you can only change username, password, email, website name, website url") 
+                        messagebox.showerror("Error","you can only change username, password, email, website name, website url")
                         continue 
 
         except: 
-            messagebox.showerror("something went wrong, please try again") 
+            messagebox.showerror("Error","something went wrong, please try again")
              
  
 def deleteP(): 
-    try: 
+    global count
+    try:
             pin = DPpin_entry.get() 
             pincheck = cursor.execute(f"SELECT pins FROM MasterPasswords WHERE pins={pin}") 
             pin2 = pincheck.fetchone() 
 
             if pin2 is None: 
-                messagebox.showerror("pin is incorrect") 
+                messagebox.showerror("Pin","pin is incorrect")
                 count = count-1
                 Dtries_label.config(text="You have " + str(count) + " chances left") 
                 if count==0: 
-                    messagebox.showerror("you have no more chances left") 
+                    messagebox.showerror("Count","you have no more chances left")
 
             pin2 = pin2[0] 
             pin2 = int(pin2) 
             print(pin2) 
             if int(pin) == pin2: 
-                messagebox.showinfo("pin is correct") 
+                messagebox.showinfo("Pin","pin is correct")
                 # Delete record from passwords table and closes teh tkinter window 
-                cursor.execute(f"DELETE FROM MasterPasswords WHERE pins={pin}") 
-                messagebox.showinfo("profile deleted successfully") 
+                cursor.execute(f"DELETE FROM MasterPasswords WHERE pins={pin}")
+                messagebox.showinfo("Delete","profile deleted successfully")
                 root.destroy() 
 
-    except: 
-            messagebox.showerror("something went wrong, please try again") 
+    except:
+            messagebox.showerror("Error","something went wrong, please try again")
 
-# Function to handle user registration 
-def register(): 
-    # Get user input from registration form 
-    username = Rusername_entry.get() 
-    MPassword = RMpassword_entry.get() 
-    ConfirmMPassword = Rconfirm_password_entry.get() 
-    pin = Rpin_entry.get() 
-    email = Remail_entry.get() 
-    hint = Rhint_entry.get() 
- 
-   # Check if pin already exists 
-    pincheck = cursor.execute(f"SELECT pins FROM MasterPasswords WHERE pins = ?", (pin,)) 
-    pin2 = pincheck.fetchone() 
-    if pin2 is not None: 
-        messagebox.showerror("Error", "Pin already exists") 
-        return 
+# Function to handle user registration
+def register():
+    # Get user input from registration form
+    username = Rusername_entry.get()
+    MPassword = RMpassword_entry.get()
+    ConfirmMPassword = Rconfirm_password_entry.get()
+    pin = Rpin_entry.get()
+    email = Remail_entry.get()
+    hint = Rhint_entry.get()
 
-    # Check validity of input data 
-    if MPassword.isalnum() == True: 
-        messagebox.showerror("Error", "Password must have special characters") 
-        return 
-    
-    if not(len(MPassword) > 7): 
+   # Check if pin already exists
+    pincheck = cursor.execute(f"SELECT pins FROM MasterPasswords WHERE pins = ?", (pin,))
+    pin2 = pincheck.fetchone()
+    if pin2 is not None:
+        messagebox.showerror("Error", "Pin already exists")
+        return
+
+    # Check validity of input data
+    if MPassword.isalnum() == True:
+        messagebox.showerror("Error", "Password must have special characters")
+        return
+
+    if not(len(MPassword) > 7):
         messagebox.showerror("Error", "Password must have 7 or more characters")
         return
-    if ConfirmMPassword != MPassword: 
-        messagebox.showerror("Error", "Passwords do not match") 
-        return 
+    if ConfirmMPassword != MPassword:
+        messagebox.showerror("Error", "Passwords do not match")
+        return
 
-    if len(pin) != 4 or not pin.isdigit(): 
-        messagebox.showerror("Error", "Pin must have 4 digits") 
-        return 
+    if len(pin) != 4 or not pin.isdigit():
+        messagebox.showerror("Error", "Pin must have 4 digits")
+        return
 
-    if '@' not in email: 
-        messagebox.showerror("Error", "Invalid Email") 
-        return 
+    if '@' not in email:
+        messagebox.showerror("Error", "Invalid Email")
+        return
 
-    # Insert user details into MasterPasswords table 
-    cursor.execute("INSERT INTO MasterPasswords VALUES (?,?,?,?,?)", (MPassword,username,int(pin),email,hint)) 
-    con.commit() 
-    messagebox.showinfo("Registration Successful", "You have successfully registered") 
-    register_frame.grid_forget() 
-    login_frame.grid() 
- 
-# Function to handle user login 
-def login(): 
-        global count 
-        username = username_entry.get() 
-        Mpassword = Mpassword_entry.get() 
-        pin = pin_entry.get() 
- 
-        try: 
-                # Using parameterized query to prevent SQL injection 
-            cursor.execute("SELECT * FROM MasterPasswords WHERE usernames = ? AND masterPassword = ? AND pins = ?", (username, Mpassword, pin)) 
-            if cursor.fetchone(): 
-                messagebox.showinfo("Login Successful", "Welcome, " + username + "!") 
-                main(username) 
-                return  # Exit function after successful login 
-            
-            else: 
-                #if the login check fails then the count 
-                messagebox.showerror("Login Failed", "Invalid username, password, or pin") 
-                count -= 1 
-                tries_label.config(text="You have " + str(count) + " tries left") 
- 
-            if count == 2: 
-                hint = messagebox.askyesno("Hint", "Would you like to see your hint?") 
-                
-                if hint: 
-                    try: 
-                        cursor.execute("SELECT hint FROM MasterPasswords WHERE usernames = ?", (username,)) 
-                        results = cursor.fetchone() 
-                        
-                        if results: 
-                            messagebox.showinfo("Hint", "Hint: " + results[0]) 
+    # Insert user details into MasterPasswords table
+    cursor.execute("INSERT INTO MasterPasswords VALUES (?,?,?,?,?)", (MPassword,username,int(pin),email,hint))
+    con.commit()
+    messagebox.showinfo("Registration Successful", "You have successfully registered")
+    register_frame.grid_forget()
+    login_frame.grid()
 
-                        else: 
-                            messagebox.showerror("Error", "No hint found for this user") 
+# Function to handle user login
+def login():
+        global count
+        username = username_entry.get()
+        Mpassword = Mpassword_entry.get()
+        pin = pin_entry.get()
 
-                    except sqlite3.Error as e: 
-                        messagebox.showerror("Error", "Failed to retrieve hint: " + str(e)) 
+        try:
+                # Using parameterized query to prevent SQL injection
+            cursor.execute("SELECT * FROM MasterPasswords WHERE usernames = ? AND masterPassword = ? AND pins = ?", (username, Mpassword, pin))
+            if cursor.fetchone():
+                messagebox.showinfo("Login Successful", "Welcome, " + username + "!")
+                main(username)
+                return  # Exit function after successful login
 
-        except sqlite3.Error as e: 
-            messagebox.showerror("Database Error", "An error occurred while accessing the database: " + str(e)) 
-            return 
+            else:
+                #if the login check fails then the count
+                messagebox.showerror("Login Failed", "Invalid username, password, or pin")
+                count -= 1
+                tries_label.config(text="You have " + str(count) + " tries left")
 
-        if count==0: 
+            if count == 2:
+                hint = messagebox.askyesno("Hint", "Would you like to see your hint?")
+
+                if hint:
+                    try:
+                        cursor.execute("SELECT hint FROM MasterPasswords WHERE usernames = ?", (username,))
+                        results = cursor.fetchone()
+
+                        if results:
+                            messagebox.showinfo("Hint", "Hint: " + results[0])
+
+                        else:
+                            messagebox.showerror("Error", "No hint found for this user")
+
+                    except sqlite3.Error as e:
+                        messagebox.showerror("Error", "Failed to retrieve hint: " + str(e))
+
+        except sqlite3.Error as e:
+            messagebox.showerror("Database Error", "An error occurred while accessing the database: " + str(e))
+            return
+
+        if count==0:
             messagebox.showerror("Error", "No more tries left")
             login_frame.grid_forget()
- 
-# Function to switch to main frame after successful login 
-def main(username): 
-    login_frame.grid_forget() 
+
+# Function to switch to main frame after successful login
+def main(username):
+    login_frame.grid_forget()
     global current
     current = main_frame
-    main_frame.grid() 
-    welcome_label.config(text="Welcome, " + username + "!")  
+    main_frame.grid()
+    welcome_label.config(text="Welcome, " + username + "!")
 
-root = tk.Tk() 
-root.title("Farrell's Password manager") 
- 
-# Create initial window 
-LorR_frame = tk.Frame(root) 
-LorR_frame.grid(padx=10, pady=10) 
- 
-# Add buttons for login and register 
-LButton = tk.Button(LorR_frame, text="Login", command=gologin) 
-LButton.grid(row=0, column=0, columnspan=2, padx=5, pady=5) 
- 
-Rbutton = tk.Button(LorR_frame, text="Register", command=goregister) 
-Rbutton.grid(row=0, column=2, columnspan=2, padx=5, pady=5)  
+root = tk.Tk()
+root.title("Farrell's Password manager")
 
-# Create register window 
-register_frame = tk.Frame(root) 
-register_frame.grid(padx=10, pady=10) 
-register_frame.grid_forget() 
- 
-# Add labels and entry fields for registration 
-Rusername_label = tk.Label(register_frame, text="Username:") 
+# Create initial window
+LorR_frame = tk.Frame(root)
+LorR_frame.grid(padx=10, pady=10)
+
+# Add buttons for login and register
+LButton = tk.Button(LorR_frame, text="Login", command=gologin)
+LButton.grid(row=0, column=0, columnspan=2, padx=5, pady=5)
+
+Rbutton = tk.Button(LorR_frame, text="Register", command=goregister)
+Rbutton.grid(row=0, column=2, columnspan=2, padx=5, pady=5)
+
+# Create register window
+register_frame = tk.Frame(root)
+register_frame.grid(padx=10, pady=10)
+register_frame.grid_forget()
+
+# Add labels and entry fields for registration
+Rusername_label = tk.Label(register_frame, text="Username:")
 Rusername_label.grid(row=0, column=0, padx=5, pady=5)
-Rusername_entry = tk.Entry(register_frame) 
-Rusername_entry.grid(row=0, column=1, padx=5, pady=5) 
- 
-RMpassword_label = tk.Label(register_frame, text="Master Password:") 
-RMpassword_label.grid(row=1, column=0, padx=5, pady=5) 
+Rusername_entry = tk.Entry(register_frame)
+Rusername_entry.grid(row=0, column=1, padx=5, pady=5)
+
+RMpassword_label = tk.Label(register_frame, text="Master Password:")
+RMpassword_label.grid(row=1, column=0, padx=5, pady=5)
 RMpassword_entry = tk.Entry(register_frame, show="*")
-RMpassword_entry.grid(row=1, column=1, padx=5, pady=5) 
- 
-Rconfirm_passord_label = tk.Label(register_frame, text="Confirm Master Password:") 
-Rconfirm_passord_label.grid(row=2, column=0, padx=5, pady=5) 
+RMpassword_entry.grid(row=1, column=1, padx=5, pady=5)
+
+Rconfirm_passord_label = tk.Label(register_frame, text="Confirm Master Password:")
+Rconfirm_passord_label.grid(row=2, column=0, padx=5, pady=5)
 Rconfirm_password_entry = tk.Entry(register_frame, show="*")
-Rconfirm_password_entry.grid(row=2, column=1, padx=5, pady=5) 
- 
-Rpin_label = tk.Label(register_frame, text="Pin (4 digits):") 
-Rpin_label.grid(row=3, column=0, padx=5, pady=5) 
+Rconfirm_password_entry.grid(row=2, column=1, padx=5, pady=5)
+
+Rpin_label = tk.Label(register_frame, text="Pin (4 digits):")
+Rpin_label.grid(row=3, column=0, padx=5, pady=5)
 Rpin_entry = tk.Entry(register_frame, show="*")
-Rpin_entry.grid(row=3, column=1, padx=5, pady=5)  
+Rpin_entry.grid(row=3, column=1, padx=5, pady=5)
 
-Remail_label = tk.Label(register_frame, text="Email:") 
-Remail_label.grid(row=4, column=0, padx=5, pady=5) 
-Remail_entry = tk.Entry(register_frame) 
-Remail_entry.grid(row=4, column=1, padx=5, pady=5) 
- 
-Rhint_label = tk.Label(register_frame, text="Hint (Reminder of Password):") 
-Rhint_label.grid(row=5, column=0, padx=5, pady=5) 
-Rhint_entry = tk.Entry(register_frame) 
-Rhint_entry.grid(row=5, column=1, padx=5, pady=5) 
+Remail_label = tk.Label(register_frame, text="Email:")
+Remail_label.grid(row=4, column=0, padx=5, pady=5)
+Remail_entry = tk.Entry(register_frame)
+Remail_entry.grid(row=4, column=1, padx=5, pady=5)
 
-# Add register button 
-register_button = tk.Button(register_frame, text="Register", command=register) 
+Rhint_label = tk.Label(register_frame, text="Hint (Reminder of Password):")
+Rhint_label.grid(row=5, column=0, padx=5, pady=5)
+Rhint_entry = tk.Entry(register_frame)
+Rhint_entry.grid(row=5, column=1, padx=5, pady=5)
+
+# Add register button
+register_button = tk.Button(register_frame, text="Register", command=register)
 register_button.grid(row=6, column=0, columnspan=2, padx=5, pady=5)
 
 back_button = tk.Button(register_frame, text="Back", command=gobackregister)
 back_button.grid(row=6, column=1, columnspan=1, padx=3,)
- 
-# Create login window 
-login_frame = tk.Frame(root) 
-login_frame.grid(padx=10, pady=10) 
-login_frame.grid_forget() 
 
-# Add labels, entry fields, and login button 
-username_label = tk.Label(login_frame,text="Username:") 
-username_label.grid(row=0, column=0, padx=5, pady=5) 
-username_entry = tk.Entry(login_frame) 
-username_entry.grid(row=0, column=1, padx=5, pady=5) 
+# Create login window
+login_frame = tk.Frame(root)
+login_frame.grid(padx=10, pady=10)
+login_frame.grid_forget()
 
-Mpassword_label = tk.Label(login_frame, text="Password:") 
-Mpassword_label.grid(row=1, column=0, padx=5, pady=5) 
-Mpassword_entry = tk.Entry(login_frame, show="*") 
-Mpassword_entry.grid(row=1, column=1, padx=5, pady=5) 
+# Add labels, entry fields, and login button
+username_label = tk.Label(login_frame,text="Username:")
+username_label.grid(row=0, column=0, padx=5, pady=5)
+username_entry = tk.Entry(login_frame)
+username_entry.grid(row=0, column=1, padx=5, pady=5)
 
-pin_label = tk.Label(login_frame, text="Pin:") 
-pin_label.grid(row=2, column=0, padx=5, pady=5) 
-pin_entry = tk.Entry(login_frame, show="*") 
-pin_entry.grid(row=2, column=1, padx=5, pady=5) 
- 
-login_button = tk.Button(login_frame, text="Login", command=login) 
+Mpassword_label = tk.Label(login_frame, text="Password:")
+Mpassword_label.grid(row=1, column=0, padx=5, pady=5)
+Mpassword_entry = tk.Entry(login_frame, show="*")
+Mpassword_entry.grid(row=1, column=1, padx=5, pady=5)
+
+pin_label = tk.Label(login_frame, text="Pin:")
+pin_label.grid(row=2, column=0, padx=5, pady=5)
+pin_entry = tk.Entry(login_frame, show="*")
+pin_entry.grid(row=2, column=1, padx=5, pady=5)
+
+login_button = tk.Button(login_frame, text="Login", command=login)
 login_button.grid(row=3,column =0, columnspan=2, padx=5, pady=5)
 
 back_button = tk.Button(login_frame, text="Back", command=gobacklogin)
 back_button.grid(row=3, column=1, columnspan=1, padx=3,)
- 
-tries_label = tk.Label(login_frame, text="") 
-tries_label.grid(row=4, columnspan=2) 
- 
-# Create main window 
-main_frame = tk.Frame(root) 
-welcome_label = tk.Label(main_frame, text="") 
-welcome_label.grid(padx=10, pady=10) 
-main_frame.grid_forget() 
- 
-# Buttons to go to features 
-PasswordGenerator_button = tk.Button(main_frame, text="Password Generator", command=gogenerate) 
-PasswordGenerator_button.grid(row= 1, column=0, columnspan=1,padx=5, pady=5) 
 
-PasswordStrength_button = tk.Button(main_frame, text="Password Strength", command=gostrength) 
-PasswordStrength_button.grid(row= 2, column=0, columnspan=1,padx=5, pady=5) 
+tries_label = tk.Label(login_frame, text="")
+tries_label.grid(row=4, columnspan=2)
 
-Add_button = tk.Button(main_frame, text="Add Password", command=goadd) 
-Add_button.grid(row= 3,column=0, columnspan=1,padx=5, pady=5) 
+# Create main window
+main_frame = tk.Frame(root)
+welcome_label = tk.Label(main_frame, text="")
+welcome_label.grid(padx=10, pady=10)
+main_frame.grid_forget()
 
-Delete_button = tk.Button(main_frame, text="Delete Password", command=godelete) 
-Delete_button.grid(row= 4, column=0, columnspan=1,padx=5, pady=5) 
+# Buttons to go to features
+PasswordGenerator_button = tk.Button(main_frame, text="Password Generator", command=gogenerate)
+PasswordGenerator_button.grid(row= 1, column=0, columnspan=1,padx=5, pady=5)
 
-Change_button = tk.Button(main_frame, text="Change Password", command=gochange) 
-Change_button.grid(row= 5, column=0, columnspan=1,padx=5, pady=5) 
+PasswordStrength_button = tk.Button(main_frame, text="Password Strength", command=gostrength)
+PasswordStrength_button.grid(row= 2, column=0, columnspan=1,padx=5, pady=5)
 
-Settings_button = tk.Button(main_frame, text="Settings", command=gosettings) 
-Settings_button.grid(row= 6, column=0, columnspan=1,padx=5, pady=5) 
+Add_button = tk.Button(main_frame, text="Add Password", command=goadd)
+Add_button.grid(row= 3,column=0, columnspan=1,padx=5, pady=5)
 
-Quit_button = tk.Button(main_frame, text="Quit", command=root.quit) 
-Quit_button.grid(row= 7, column=0, columnspan=1,padx=5, pady=5) 
+Delete_button = tk.Button(main_frame, text="Delete Password", command=godelete)
+Delete_button.grid(row= 4, column=0, columnspan=1,padx=5, pady=5)
 
-# Create add window 
-add_frame = tk.Frame(root) 
-add_frame.grid(padx=10, pady=10) 
+Change_button = tk.Button(main_frame, text="Change Password", command=gochange)
+Change_button.grid(row= 5, column=0, columnspan=1,padx=5, pady=5)
+
+Settings_button = tk.Button(main_frame, text="Settings", command=gosettings)
+Settings_button.grid(row= 6, column=0, columnspan=1,padx=5, pady=5)
+
+Quit_button = tk.Button(main_frame, text="Quit", command=root.quit)
+Quit_button.grid(row= 7, column=0, columnspan=1,padx=5, pady=5)
+
+# Create add window
+add_frame = tk.Frame(root)
+add_frame.grid(padx=10, pady=10)
 add_frame.grid_forget()
 
-Apin_label = tk.Label(add_frame, text="Pin:") 
-Apin_label.grid(row=0, column=0, padx=5, pady=5) 
-Apin_entry = tk.Entry(add_frame) 
+Apin_label = tk.Label(add_frame, text="Pin:")
+Apin_label.grid(row=0, column=0, padx=5, pady=5)
+Apin_entry = tk.Entry(add_frame,show ="*")
 Apin_entry.grid(row=0, column=1, padx=5, pady=5)
 
-Ausername_label = tk.Label(add_frame, text="Username:") 
-Ausername_label.grid(row=1, column=0, padx=5, pady=5) 
-Ausername_entry = tk.Entry(add_frame) 
-Ausername_entry.grid(row=1, column=1, padx=5, pady=5)  
+Ausername_label = tk.Label(add_frame, text="Username:")
+Ausername_label.grid(row=1, column=0, padx=5, pady=5)
+Ausername_entry = tk.Entry(add_frame)
+Ausername_entry.grid(row=1, column=1, padx=5, pady=5)
 
-Apassword_label = tk.Label(add_frame, text="Master Password:") 
-Apassword_label.grid(row=2, column=0, padx=5, pady=5) 
-Apassword_entry = tk.Entry(add_frame) 
-Apassword_entry.grid(row=2, column=1, padx=5, pady=5) 
+Apassword_label = tk.Label(add_frame, text="Master Password:")
+Apassword_label.grid(row=2, column=0, padx=5, pady=5)
+Apassword_entry = tk.Entry(add_frame)
+Apassword_entry.grid(row=2, column=1, padx=5, pady=5)
 
-Aemail_label = tk.Label(add_frame, text="Email:") 
-Aemail_label.grid(row=3, column=0, padx=5, pady=5) 
-Aemail_entry = tk.Entry(add_frame) 
-Aemail_entry.grid(row=3, column=1, padx=5, pady=5) 
+Aemail_label = tk.Label(add_frame, text="Email:")
+Aemail_label.grid(row=3, column=0, padx=5, pady=5)
+Aemail_entry = tk.Entry(add_frame)
+Aemail_entry.grid(row=3, column=1, padx=5, pady=5)
 
-AwebsiteURL_label = tk.Label(add_frame, text="website URl:") 
-AwebsiteURL_label.grid(row=4, column=0, padx=5, pady=5) 
-AwebsiteURL_entry = tk.Entry(add_frame) 
-AwebsiteURL_entry.grid(row=4, column=1, padx=5, pady=5) 
+AwebsiteURL_label = tk.Label(add_frame, text="website URl:")
+AwebsiteURL_label.grid(row=4, column=0, padx=5, pady=5)
+AwebsiteURL_entry = tk.Entry(add_frame)
+AwebsiteURL_entry.grid(row=4, column=1, padx=5, pady=5)
 
-AwebsiteName_label = tk.Label(add_frame, text="Website Name:") 
-AwebsiteName_label.grid(row=5, column=0, padx=5, pady=5) 
-AwebsiteName_entry = tk.Entry(add_frame) 
-AwebsiteName_entry.grid(row=5, column=1, padx=5, pady=5) 
- 
-Atries_label = tk.Label(add_frame, text="") 
-Atries_label.grid(row=6, columnspan=2) 
+AwebsiteName_label = tk.Label(add_frame, text="Website Name:")
+AwebsiteName_label.grid(row=5, column=0, padx=5, pady=5)
+AwebsiteName_entry = tk.Entry(add_frame)
+AwebsiteName_entry.grid(row=5, column=1, padx=5, pady=5)
 
-add_button = tk.Button(add_frame, text="Add", command=add) 
+Atries_label = tk.Label(add_frame, text="")
+Atries_label.grid(row=6, columnspan=2)
+
+add_button = tk.Button(add_frame, text="Add", command=add)
 add_button.grid(row=7, column=0, columnspan=1,padx=5, pady=5)
- 
-Amenu = tk.Button(add_frame, text="Main Menu", command=gomenu) 
-Amenu.grid(row=8, column=0, columnspan=1,padx=5, pady=5) 
 
-#create delete window 
-delete_frame = tk.Frame(root) 
-delete_frame.grid(padx=10, pady=10) 
-delete_frame.grid_forget() 
+Amenu = tk.Button(add_frame, text="Main Menu", command=gomenu)
+Amenu.grid(row=8, column=0, columnspan=1,padx=5, pady=5)
 
-Dpin_label = tk.Label(delete_frame, text="Pin:") 
-Dpin_label.grid(row=0, column=0, padx=5, pady=5) 
-Dpin_entry = tk.Entry(delete_frame) 
-Dpin_entry.grid(row=0, column=1, padx=5, pady=5) 
+#create delete window
+delete_frame = tk.Frame(root)
+delete_frame.grid(padx=10, pady=10)
+delete_frame.grid_forget()
 
-Dsearch_label = tk.Label(delete_frame, text="Search:") 
-Dsearch_label.grid(row=1, column=0, padx=5, pady=5) 
-Dsearch_entry = tk.Entry(delete_frame) 
+Dpin_label = tk.Label(delete_frame, text="Pin:")
+Dpin_label.grid(row=0, column=0, padx=5, pady=5)
+Dpin_entry = tk.Entry(delete_frame,show="*")
+Dpin_entry.grid(row=0, column=1, padx=5, pady=5)
+
+Dsearch_label = tk.Label(delete_frame, text="Search:")
+Dsearch_label.grid(row=1, column=0, padx=5, pady=5)
+Dsearch_entry = tk.Entry(delete_frame)
 Dsearch_entry.grid(row=1, column=1, padx=5, pady=5)
 
-Dvalue_label = tk.Label(delete_frame, text= "value you want to delete:") 
-Dvalue_label.grid(row=2, column=0, padx=5, pady=5) 
-Dvalue_entry = tk.Entry(delete_frame) 
-Dvalue_entry.grid(row=2, column=1, padx=5, pady=5) 
+Dvalue_label = tk.Label(delete_frame, text= "value you want to delete:")
+Dvalue_label.grid(row=2, column=0, padx=5, pady=5)
+Dvalue_entry = tk.Entry(delete_frame)
+Dvalue_entry.grid(row=2, column=1, padx=5, pady=5)
 
-DNvalue_label = tk.Label(delete_frame, text= "New value:") 
-DNvalue_label.grid(row=3, column=0, padx=5, pady=5) 
-DNvalue_entry = tk.Entry(delete_frame) 
-DNvalue_entry.grid(row=3, column=1, padx=5, pady=5) 
+DNvalue_label = tk.Label(delete_frame, text= "New value:")
+DNvalue_label.grid(row=3, column=0, padx=5, pady=5)
+DNvalue_entry = tk.Entry(delete_frame)
+DNvalue_entry.grid(row=3, column=1, padx=5, pady=5)
 
-Dtries_label = tk.Label(delete_frame, text="") 
-Dtries_label.grid(row=3, columnspan=2) 
+Dtries_label = tk.Label(delete_frame, text="")
+Dtries_label.grid(row=3, columnspan=2)
 
-delete_button = tk.Button(delete_frame, text="Delete", command=delete) 
-delete_button.grid(row=4, column=0, columnspan=1,padx=5, pady=5) 
+delete_button = tk.Button(delete_frame, text="Delete", command=delete)
+delete_button.grid(row=4, column=0, columnspan=1,padx=5, pady=5)
 
-Dmenu = tk.Button(delete_frame, text="Main Menu", command=gomenu) 
-Dmenu.grid(row=5, column=0, columnspan=1,padx=5, pady=5) 
+Dmenu = tk.Button(delete_frame, text="Main Menu", command=gomenu)
+Dmenu.grid(row=5, column=0, columnspan=1,padx=5, pady=5)
 
-#create change window 
-change_frame = tk.Frame(root) 
-change_frame.grid(padx=10, pady=10) 
-change_frame.grid_forget() 
+#create change window
+change_frame = tk.Frame(root)
+change_frame.grid(padx=10, pady=10)
+change_frame.grid_forget()
 
-Cpin_label = tk.Label(change_frame, text="Pin:") 
-Cpin_label.grid(row=0, column=0, padx=5, pady=5) 
-Cpin_entry = tk.Entry(change_frame) 
-Cpin_entry.grid(row=0, column=1, padx=5, pady=5) 
+Cpin_label = tk.Label(change_frame, text="Pin:")
+Cpin_label.grid(row=0, column=0, padx=5, pady=5)
+Cpin_entry = tk.Entry(change_frame,show="*")
+Cpin_entry.grid(row=0, column=1, padx=5, pady=5)
 
-Csearch_label = tk.Label(change_frame, text="Search:") 
-Csearch_label.grid(row=1, column=0, padx=5, pady=5) 
-Csearch_entry = tk.Entry(change_frame) 
+Csearch_label = tk.Label(change_frame, text="Search:")
+Csearch_label.grid(row=1, column=0, padx=5, pady=5)
+Csearch_entry = tk.Entry(change_frame)
 Csearch_entry.grid(row=1, column=1, padx=5, pady=5)
 
-Cvalue_label = tk.Label(change_frame, text= "value you want to change:") 
-Cvalue_label.grid(row=2, column=0, padx=5, pady=5) 
-Cvalue_entry = tk.Entry(change_frame) 
+Cvalue_label = tk.Label(change_frame, text= "value you want to change:")
+Cvalue_label.grid(row=2, column=0, padx=5, pady=5)
+Cvalue_entry = tk.Entry(change_frame)
 Cvalue_entry.grid(row=2, column=1, padx=5, pady=5)
- 
-CNvalue_label = tk.Label(change_frame, text= "New value:") 
-CNvalue_label.grid(row=3, column=0, padx=5, pady=5) 
-CNvalue_entry = tk.Entry(change_frame) 
-CNvalue_entry.grid(row=3, column=1, padx=5, pady=5) 
 
-Ctries_label = tk.Label(change_frame, text="") 
-Ctries_label.grid(row=4, columnspan=2) 
+CNvalue_label = tk.Label(change_frame, text= "New value:")
+CNvalue_label.grid(row=3, column=0, padx=5, pady=5)
+CNvalue_entry = tk.Entry(change_frame)
+CNvalue_entry.grid(row=3, column=1, padx=5, pady=5)
 
-change_button = tk.Button(change_frame, text="Change", command=change) 
-change_button.grid(row=5, column=0, columnspan=1,padx=5, pady=5) 
+Ctries_label = tk.Label(change_frame, text="")
+Ctries_label.grid(row=4, columnspan=2)
 
-Cmenu = tk.Button(change_frame, text="Main Menu", command=gomenu) 
-Cmenu.grid(row=6, column=0, columnspan=1,padx=5, pady=5) 
+change_button = tk.Button(change_frame, text="Change", command=change)
+change_button.grid(row=5, column=0, columnspan=1,padx=5, pady=5)
 
-#create generate window 
-generate_frame = tk.Frame(root) 
-generate_frame.grid(padx=10, pady=10) 
-generate_frame.grid_forget() 
+Cmenu = tk.Button(change_frame, text="Main Menu", command=gomenu)
+Cmenu.grid(row=6, column=0, columnspan=1,padx=5, pady=5)
 
-Gpin_label = tk.Label(generate_frame, text="Pin:") 
-Gpin_label.grid(row=0, column=0, padx=5, pady=5) 
-Gpin_entry = tk.Entry(generate_frame) 
-Gpin_entry.grid(row=0, column=1, padx=5, pady=5) 
- 
-length_label = tk.Label(generate_frame, text="Length of password(has to be greater than 8):") 
-length_label.grid(row=1, column=0, padx=5, pady=5) 
-length_entry = tk.Entry(generate_frame) 
-length_entry.grid(row=1, column=1, padx=5, pady=5) 
+#create generate window
+generate_frame = tk.Frame(root)
+generate_frame.grid(padx=10, pady=10)
+generate_frame.grid_forget()
 
-Gtries_label = tk.Label(generate_frame, text="") 
-Gtries_label.grid(row=2, columnspan=2) 
+Gpin_label = tk.Label(generate_frame, text="Pin:")
+Gpin_label.grid(row=0, column=0, padx=5, pady=5)
+Gpin_entry = tk.Entry(generate_frame,show="*")
+Gpin_entry.grid(row=0, column=1, padx=5, pady=5)
 
-generated = tk.Label(generate_frame, text="") 
-generated.grid(row=4,column=0, columnspan=2) 
+length_label = tk.Label(generate_frame, text="Length of password(has to be greater than 8):")
+length_label.grid(row=1, column=0, padx=5, pady=5)
+length_entry = tk.Entry(generate_frame)
+length_entry.grid(row=1, column=1, padx=5, pady=5)
 
-generate_button = tk.Button(generate_frame, text="Generate", command=generate) 
-generate_button.grid(row=3, column=0, columnspan=1,padx=5, pady=5) 
+Gtries_label = tk.Label(generate_frame, text="")
+Gtries_label.grid(row=2, columnspan=2)
 
-Gmenu = tk.Button(generate_frame, text="Main Menu", command=gomenu) 
-Gmenu.grid(row=5, column=0, columnspan=1,padx=5, pady=5) 
+generated = tk.Label(generate_frame, text="")
+generated.grid(row=4,column=0, columnspan=2)
 
-#create strength test window 
-strength_frame = tk.Frame(root) 
-strength_frame.grid(padx=10, pady=10) 
-strength_frame.grid_forget() 
+generate_button = tk.Button(generate_frame, text="Generate", command=generate)
+generate_button.grid(row=3, column=0, columnspan=1,padx=5, pady=5)
 
-Spin_label = tk.Label(strength_frame, text="Pin:") 
-Spin_label.grid(row=0, column=0, padx=5, pady=5) 
-Spin_entry = tk.Entry(strength_frame) 
-Spin_entry.grid(row=0, column=1, padx=5, pady=5) 
+Gmenu = tk.Button(generate_frame, text="Main Menu", command=gomenu)
+Gmenu.grid(row=5, column=0, columnspan=1,padx=5, pady=5)
 
-pwd_label = tk.Label(strength_frame, text="Password:") 
-pwd_label.grid(row=1, column=0, padx=5, pady=5) 
-pwd_entry = tk.Entry(strength_frame) 
-pwd_entry.grid(row=1, column=1, padx=5) 
+#create strength test window
+strength_frame = tk.Frame(root)
+strength_frame.grid(padx=10, pady=10)
+strength_frame.grid_forget()
 
-Stries_label = tk.Label(strength_frame, text="") 
-Stries_label.grid(row=2, columnspan=2) 
- 
-strength_button = tk.Button(strength_frame, text="Check Strength", command=strength_test) 
-strength_button.grid(row=3, column=0, columnspan=1,padx=5, pady=5) 
+Spin_label = tk.Label(strength_frame, text="Pin:")
+Spin_label.grid(row=0, column=0, padx=5, pady=5)
+Spin_entry = tk.Entry(strength_frame,show="*")
+Spin_entry.grid(row=0, column=1, padx=5, pady=5)
 
-Smenu = tk.Button(strength_frame, text="Main Menu", command=gomenu) 
-Smenu.grid(row=4, column=0, columnspan=1,padx=5, pady=5) 
- 
-# create addfrom window 
-addfrom_frame = tk.Frame(root) 
-addfrom_frame.grid(padx=10, pady=10) 
-addfrom_frame.grid_forget() 
+pwd_label = tk.Label(strength_frame, text="Password:")
+pwd_label.grid(row=1, column=0, padx=5, pady=5)
+pwd_entry = tk.Entry(strength_frame)
+pwd_entry.grid(row=1, column=1, padx=5)
 
-AFusername_label = tk.Label(addfrom_frame, text="Username:") 
-AFusername_label.grid(row=1, column=0, padx=5, pady=5) 
-AFusername_entry = tk.Entry(addfrom_frame) 
-AFusername_entry.grid(row=1, column=1, padx=5, pady=5) 
+Stries_label = tk.Label(strength_frame, text="")
+Stries_label.grid(row=2, columnspan=2)
 
-AFemail_label = tk.Label(addfrom_frame, text="Email:") 
-AFemail_label.grid(row=2, column=0, padx=5, pady=5) 
-AFemail_entry = tk.Entry(addfrom_frame) 
-AFemail_entry.grid(row=2, column=1, padx=5, pady=5) 
+strength_button = tk.Button(strength_frame, text="Check Strength", command=strength_test)
+strength_button.grid(row=3, column=1, columnspan=1,padx=5, pady=5)
 
-AFwebsiteURL_label = tk.Label(addfrom_frame, text="Confirm Master Password:") 
-AFwebsiteURL_label.grid(row=3, column=0, padx=5, pady=5) 
-AFwebsiteURL_entry = tk.Entry(addfrom_frame) 
-AFwebsiteURL_entry.grid(row=3, column=1, padx=5, pady=5) 
+Smenu = tk.Button(strength_frame, text="Main Menu", command=gomenu)
+Smenu.grid(row=4, column=1, columnspan=1,padx=5, pady=5)
 
-AFwebsiteName_label = tk.Label(addfrom_frame, text="Pin (4 digits):") 
-AFwebsiteName_label.grid(row=4, column=0, padx=5, pady=5) 
-AFwebsiteName_entry = tk.Entry(addfrom_frame) 
-AFwebsiteName_entry.grid(row=4, column=1, padx=5, pady=5) 
+# create addfrom window
+addfrom_frame = tk.Frame(root)
+addfrom_frame.grid(padx=10, pady=10)
+addfrom_frame.grid_forget()
 
-#create settings window 
-settings_frame = tk.Frame(root) 
-settings_frame.grid(padx=10, pady=10) 
-settings_frame.grid_forget() 
+AFusername_label = tk.Label(addfrom_frame, text="Username:")
+AFusername_label.grid(row=1, column=0, padx=5, pady=5)
+AFusername_entry = tk.Entry(addfrom_frame)
+AFusername_entry.grid(row=1, column=1, padx=5, pady=5)
 
-viewProfile_button = tk.Button(settings_frame, text="View Profiles", command=goviewP) 
-viewProfile_button.grid(row=0, column=0, columnspan=1,padx=5, pady=5) 
+AFemail_label = tk.Label(addfrom_frame, text="Email:")
+AFemail_label.grid(row=2, column=0, padx=5, pady=5)
+AFemail_entry = tk.Entry(addfrom_frame)
+AFemail_entry.grid(row=2, column=1, padx=5, pady=5)
 
-editProfile_button = tk.Button(settings_frame, text="Edit Profile", command=goeditP) 
-editProfile_button.grid(row=1, column=0, columnspan=1,padx=5, pady=5) 
+AFwebsiteURL_label = tk.Label(addfrom_frame, text="Confirm Master Password:")
+AFwebsiteURL_label.grid(row=3, column=0, padx=5, pady=5)
+AFwebsiteURL_entry = tk.Entry(addfrom_frame)
+AFwebsiteURL_entry.grid(row=3, column=1, padx=5, pady=5)
 
-deleteProfile_button = tk.Button(settings_frame, text="Delete Profile", command=godeleteP) 
-deleteProfile_button.grid(row=2, column=0, columnspan=1,padx=5, pady=5) 
+AFwebsiteName_label = tk.Label(addfrom_frame, text="Pin (4 digits):")
+AFwebsiteName_label.grid(row=4, column=0, padx=5, pady=5)
+AFwebsiteName_entry = tk.Entry(addfrom_frame)
+AFwebsiteName_entry.grid(row=4, column=1, padx=5, pady=5)
 
-Semenu = tk.Button(settings_frame, text="Main Menu", command=gomenu) 
-Semenu.grid(row=3, column=0, columnspan=1,padx=5, pady=5) 
+#create settings window
+settings_frame = tk.Frame(root)
+settings_frame.grid(padx=10, pady=10)
+settings_frame.grid_forget()
 
-#create view profiles window 
-viewP_frame = tk.Frame(root) 
-viewP_frame.grid(padx=10, pady=10) 
-viewP_frame.grid_forget() 
+viewProfile_button = tk.Button(settings_frame, text="View Profiles", command=goviewP)
+viewProfile_button.grid(row=0, column=0, columnspan=1,padx=5, pady=5)
 
-Vsearch_label = tk.Label(viewP_frame, text="Search:") 
-Vsearch_label.grid(row=1, column=0, padx=5, pady=5) 
-Vsearch_entry = tk.Entry(viewP_frame) 
-Vsearch_entry.grid(row=1, column=1, padx=5, pady=5) 
+editProfile_button = tk.Button(settings_frame, text="Edit Profile", command=goeditP)
+editProfile_button.grid(row=1, column=0, columnspan=1,padx=5, pady=5)
 
-viewP_button = tk.Button(viewP_frame, text="View", command=viewP) 
-viewP_button.grid(row=2, column=0, columnspan=1,padx=5, pady=5) 
+deleteProfile_button = tk.Button(settings_frame, text="Delete Profile", command=godeleteP)
+deleteProfile_button.grid(row=2, column=0, columnspan=1,padx=5, pady=5)
 
-Vsettings = tk.Button(viewP_frame, text="Settings", command=gosettings) 
-Vsettings.grid(row=3, column=0, columnspan=1,padx=5, pady=5) 
+Semenu = tk.Button(settings_frame, text="Main Menu", command=gomenu)
+Semenu.grid(row=3, column=0, columnspan=1,padx=5, pady=5)
 
-#create edit profiles window 
-editP_frame = tk.Frame(root) 
-editP_frame.grid(padx=10, pady=10) 
-editP_frame.grid_forget() 
+#create view profiles window
+viewP_frame = tk.Frame(root)
+viewP_frame.grid(padx=10, pady=10)
+viewP_frame.grid_forget()
 
-Esearch_label = tk.Label(editP_frame, text="Search:") 
-Esearch_label.grid(row=1, column=0, padx=5, pady=5) 
-Esearch_entry = tk.Entry(editP_frame) 
-Esearch_entry.grid(row=1, column=1, padx=5, pady=5) 
+Vsearch_label = tk.Label(viewP_frame, text="Search:")
+Vsearch_label.grid(row=1, column=0, padx=5, pady=5)
+Vsearch_entry = tk.Entry(viewP_frame)
+Vsearch_entry.grid(row=1, column=1, padx=5, pady=5)
 
-Evalue_label = tk.Label(editP_frame, text= "value you want to change:") 
-Evalue_label.grid(row=2, column=0, padx=5, pady=5) 
-Evalue_entry = tk.Entry(editP_frame) 
+viewP_button = tk.Button(viewP_frame, text="View", command=viewP)
+viewP_button.grid(row=2, column=0, columnspan=1,padx=5, pady=5)
+
+Vsettings = tk.Button(viewP_frame, text="Settings", command=gosettings)
+Vsettings.grid(row=3, column=0, columnspan=1,padx=5, pady=5)
+
+#create edit profiles window
+editP_frame = tk.Frame(root)
+editP_frame.grid(padx=10, pady=10)
+editP_frame.grid_forget()
+
+Esearch_label = tk.Label(editP_frame, text="Search:")
+Esearch_label.grid(row=1, column=0, padx=5, pady=5)
+Esearch_entry = tk.Entry(editP_frame)
+Esearch_entry.grid(row=1, column=1, padx=5, pady=5)
+
+Evalue_label = tk.Label(editP_frame, text= "value you want to change:")
+Evalue_label.grid(row=2, column=0, padx=5, pady=5)
+Evalue_entry = tk.Entry(editP_frame)
 Evalue_entry.grid(row=2, column=1, padx=5, pady=5)
 
-ENvalue_label = tk.Label(editP_frame, text= "New value:") 
-ENvalue_label.grid(row=3, column=0, padx=5, pady=5) 
-ENvalue_entry = tk.Entry(editP_frame) 
-ENvalue_entry.grid(row=3, column=1, padx=5, pady=5) 
+ENvalue_label = tk.Label(editP_frame, text= "New value:")
+ENvalue_label.grid(row=3, column=0, padx=5, pady=5)
+ENvalue_entry = tk.Entry(editP_frame)
+ENvalue_entry.grid(row=3, column=1, padx=5, pady=5)
 
-editP_button = tk.Button(editP_frame, text="Edit", command=editP) 
-editP_button.grid(row=4, column=0, columnspan=1,padx=5, pady=5) 
+editP_button = tk.Button(editP_frame, text="Edit", command=editP)
+editP_button.grid(row=4, column=0, columnspan=1,padx=5, pady=5)
 
-Esettings = tk.Button(editP_frame, text="Settings", command=gosettings) 
+Esettings = tk.Button(editP_frame, text="Settings", command=gosettings)
 Esettings.grid(row=5, column=0, columnspan=1,padx=5, pady=5)
 
-#delete profile window 
-deleteP_frame = tk.Frame(root) 
-deleteP_frame.grid(padx=10, pady=10) 
-deleteP_frame.grid_forget() 
+#delete profile window
+deleteP_frame = tk.Frame(root)
+deleteP_frame.grid(padx=10, pady=10)
+deleteP_frame.grid_forget()
 
-DPpin_label = tk.Label(deleteP_frame, text="Pin:") 
-DPpin_label.grid(row=1, column=0, padx=5, pady=5) 
-DPpin_entry = tk.Entry(deleteP_frame) 
+DPpin_label = tk.Label(deleteP_frame, text="Pin:")
+DPpin_label.grid(row=1, column=0, padx=5, pady=5)
+DPpin_entry = tk.Entry(deleteP_frame, show="*")
 DPpin_entry.grid(row=1, column=1, padx=5, pady=5)
 
-deleteP_button = tk.Button(deleteP_frame, text="Delete", command=deleteP) 
-deleteP_button.grid(row=2, column=0, columnspan=1,padx=5, pady=5) 
+deleteP_button = tk.Button(deleteP_frame, text="Delete", command=deleteP)
+deleteP_button.grid(row=2, column=0, columnspan=1,padx=5, pady=5)
 
-Dsettings = tk.Button(deleteP_frame, text="Settings", command=gosettings) 
+Dsettings = tk.Button(deleteP_frame, text="Settings", command=gosettings)
 Dsettings.grid(row=3, column=0, columnspan=1,padx=5, pady=5)
 
 root.mainloop()
