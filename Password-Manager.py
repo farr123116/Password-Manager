@@ -200,30 +200,53 @@ def add():
             messagebox.showerror("Error", "An error has occured") 
 
 #adds passwords from the strength test and generator 
-def addfrom(pwd,pin): 
-    addfrom_frame.grid() 
+def addfrom():
+
     try: 
-        username= AFusername_entry.get() 
+        pin= AFpin_entry.get()
+
+        pwd= AFpassword_entry.get()
+
+        username= AFusername_entry.get()
 
         email= AFemail_entry.get() 
 
         website_name= AFwebsiteName_entry.get() 
 
-        website_url= AFwebsiteURL_entry.get() 
+        website_url= AFwebsiteURL_entry.get()
 
-        cursor.execute("INSERT INTO Passwords VALUES(?,?,?,?,?,?)",(pin,pwd,username,email,website_name,website_url)) 
+        cursor.execute("SELECT FROM Passwords WHERE website_names = ?", (AFwebsiteName_entry.get()))
+        result = cursor.fetchone()
+        if result:
+            messagebox.showerror("Error","you already have an account for this website")
+            return
+        else:
+            pass
 
-        cursor.execute("SELECT*FROM Passwords") 
+        cursor.execute("SELECT FROM Passwords WHERE url = ?", (AFwebsiteURL_entry.get()))
+        result = cursor.fetchone()
+        if result:
+            messagebox.showerror("Error", "you already have an account for this website")
 
-        results= cursor.fetchall() 
-
-        print(results) 
+        else:
+            pass
 
         ask= messagebox.askyesno("Confirm", "Are you sure you want to add this information?") 
 
-        if ask== "yes": 
+        if ask== "yes":
+            cursor.execute("INSERT INTO Passwords VALUES(?,?,?,?,?,?)",
+                           (pin, pwd, username, email, website_name, website_url))
 
-            confirm = True 
+            cursor.execute("SELECT*FROM Passwords")
+
+            results = cursor.fetchall()
+
+            print(results)
+            addfrom_frame.grid_forget()
+            main_frame.grid()
+
+            return
+
 
         else: 
 
@@ -406,14 +429,14 @@ def generate():
                 generated.config(text=pwd) 
                 # Ask user if they want to add the generated password to their account 
                 add = messagebox.askyesno("Add Password", "Do you want to add this password to your account?") 
-                if add: 
-                    addfrom(pwd, pin) 
-                    addfrom_frame.grid_forget() 
-                    generate_frame.grid_forget() 
-                    main_frame.grid() 
+                if add:
+                    addfrom_frame.grid()
+                    AFpassword_entry.insert(0, pwd)
+                    AFpin_entry.insert(0, pin)
+                    generate_frame.grid_forget()
 
-            else: 
-                messagebox.showerror("Error", "Something went wrong. Please try again.") 
+            else:
+                messagebox.showerror("Error", "Something went wrong. Please try again.")
 
     except Exception as e: 
         messagebox.showerror("Error", str(e)) 
@@ -459,12 +482,12 @@ def strength_test():
                             if pwd.isalnum()==False: 
                                 messagebox.showinfo("valid Password","Password strength: Strong")
                                 add = messagebox.askyesno("Add","do you want to add this password to your account yes or no")
-                                if add == "yes": 
-                                    addfrom(pwd,pin) 
-                                    addfrom_frame.grid_forget() 
-                                    strength_frame.grid_forget() 
-                                    main_frame.grid() 
-                                else: 
+                                if add == "yes":
+                                    addfrom_frame.grid()
+                                    AFpassword_entry.insert(0, pwd)
+                                    AFpin_entry.insert(0, pin)
+                                    strength_frame.grid_forget()
+                                else:
                                     strength_frame.grid_forget() 
                                     main_frame.grid() 
                             else: 
@@ -478,10 +501,11 @@ def strength_test():
                                     add = messagebox.askyesno("Add","do you want to add this password to your account yes or no")
 
                                     if add == "yes": 
-                                        addfrom(pwd,pin) 
-                                        addfrom_frame.grid_forget() 
+                                        addfrom_frame.grid()
+                                        AFpassword_entry.insert(0,pwd)
+                                        AFpin_entry.insert(0,pin)
                                         strength_frame.grid_forget() 
-                                        main_frame.grid() 
+
 
                                     else: 
                                         strength_frame.grid_forget() 
@@ -962,25 +986,38 @@ addfrom_frame = tk.Frame(root)
 addfrom_frame.grid(padx=10, pady=10)
 addfrom_frame.grid_forget()
 
+AFpin_label = tk.Label(addfrom_frame, text="Pin:")
+AFpin_label.grid(row=0, column=0, padx=5, pady=5)
+AFpin_entry = tk.Entry(addfrom_frame,show="*")
+AFpin_entry.grid(row=0, column=1, padx=5, pady=5)
+
+AFpassword_label = tk.Label(addfrom_frame, text="Password:")
+AFpassword_label.grid(row=1, column=0, padx=5, pady=5)
+AFpassword_entry = tk.Entry(addfrom_frame,show="*")
+AFpassword_entry.grid(row=1, column=1, padx=5, pady=5)
+
 AFusername_label = tk.Label(addfrom_frame, text="Username:")
-AFusername_label.grid(row=1, column=0, padx=5, pady=5)
+AFusername_label.grid(row=2, column=0, padx=5, pady=5)
 AFusername_entry = tk.Entry(addfrom_frame)
-AFusername_entry.grid(row=1, column=1, padx=5, pady=5)
+AFusername_entry.grid(row=2, column=1, padx=5, pady=5)
 
 AFemail_label = tk.Label(addfrom_frame, text="Email:")
-AFemail_label.grid(row=2, column=0, padx=5, pady=5)
+AFemail_label.grid(row=3, column=0, padx=5, pady=5)
 AFemail_entry = tk.Entry(addfrom_frame)
-AFemail_entry.grid(row=2, column=1, padx=5, pady=5)
+AFemail_entry.grid(row=3, column=1, padx=5, pady=5)
 
-AFwebsiteURL_label = tk.Label(addfrom_frame, text="Confirm Master Password:")
-AFwebsiteURL_label.grid(row=3, column=0, padx=5, pady=5)
+AFwebsiteURL_label = tk.Label(addfrom_frame, text="URL:")
+AFwebsiteURL_label.grid(row=4, column=0, padx=5, pady=5)
 AFwebsiteURL_entry = tk.Entry(addfrom_frame)
-AFwebsiteURL_entry.grid(row=3, column=1, padx=5, pady=5)
+AFwebsiteURL_entry.grid(row=4, column=1, padx=5, pady=5)
 
-AFwebsiteName_label = tk.Label(addfrom_frame, text="Pin (4 digits):")
-AFwebsiteName_label.grid(row=4, column=0, padx=5, pady=5)
+AFwebsiteName_label = tk.Label(addfrom_frame, text="Website Name:")
+AFwebsiteName_label.grid(row=5, column=0, padx=5, pady=5)
 AFwebsiteName_entry = tk.Entry(addfrom_frame)
-AFwebsiteName_entry.grid(row=4, column=1, padx=5, pady=5)
+AFwebsiteName_entry.grid(row=5, column=1, padx=5, pady=5)
+
+addfrom_button = tk.Button(addfrom_frame, text="Add", command=addfrom)
+addfrom_button.grid(row=6, column=1, columnspan=1,padx=5, pady=5)
 
 #create settings window
 settings_frame = tk.Frame(root)
