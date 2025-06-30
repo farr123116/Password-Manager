@@ -196,8 +196,8 @@ def add():
                 add_frame.grid_forget() 
                 main_frame.grid() 
     #when their is an error it outputs the message below
-    except: 
-            messagebox.showerror("Error", "An error has occured") 
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {e}")
 
 #adds passwords from the strength test and generator 
 def addfrom():
@@ -215,7 +215,7 @@ def addfrom():
 
         website_url= AFwebsiteURL_entry.get()
 
-        cursor.execute("SELECT FROM Passwords WHERE website_names = ?", (AFwebsiteName_entry.get()))
+        cursor.execute("SELECT * FROM Passwords WHERE website_names = ?", (AFwebsiteName_entry.get(),))
         result = cursor.fetchone()
         if result:
             messagebox.showerror("Error","you already have an account for this website")
@@ -223,7 +223,7 @@ def addfrom():
         else:
             pass
 
-        cursor.execute("SELECT FROM Passwords WHERE url = ?", (AFwebsiteURL_entry.get()))
+        cursor.execute("SELECT * FROM Passwords WHERE url = ?", (AFwebsiteURL_entry.get(),))
         result = cursor.fetchone()
         if result:
             messagebox.showerror("Error", "you already have an account for this website")
@@ -233,15 +233,16 @@ def addfrom():
 
         ask= messagebox.askyesno("Confirm", "Are you sure you want to add this information?") 
 
-        if ask== "yes":
+        if ask :
             cursor.execute("INSERT INTO Passwords VALUES(?,?,?,?,?,?)",
                            (pin, pwd, username, email, website_name, website_url))
 
             cursor.execute("SELECT*FROM Passwords")
-
+            con.commit()
             results = cursor.fetchall()
 
             print(results)
+            messagebox.showinfo("Success", "Account information added successfully!")
             addfrom_frame.grid_forget()
             main_frame.grid()
 
@@ -250,11 +251,11 @@ def addfrom():
 
         else: 
 
-            pass 
+            pass
 
-    except: 
-        messagebox.showerror("Error", "An error has occured") 
 
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {e}")
  
 
      
@@ -545,10 +546,11 @@ def viewP():
 
                     else: 
                         messagebox.showerror("Error","you can only change username, password, email, website name, website url")
-                        continue 
+                        continue
 
-    except: 
-        messagebox.showerror("Error","something went wrong, please try again")
+
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {e}")
  
 #changes the profile details 
 def editP(): 
@@ -572,10 +574,12 @@ def editP():
 
                     else: 
                         messagebox.showerror("Error","you can only change username, password, email, website name, website url")
-                        continue 
+                        continue
 
-        except: 
-            messagebox.showerror("Error","something went wrong, please try again")
+
+        except Exception as e:
+
+            messagebox.showerror("Error", f"An error occurred: {e}")
              
  
 def deleteP(): 
@@ -600,10 +604,12 @@ def deleteP():
                 # Delete record from passwords table and closes teh tkinter window 
                 cursor.execute(f"DELETE FROM MasterPasswords WHERE pins={pin}")
                 messagebox.showinfo("Delete","profile deleted successfully")
-                root.destroy() 
+                root.destroy()
 
-    except:
-            messagebox.showerror("Error","something went wrong, please try again")
+
+    except Exception as e:
+
+        messagebox.showerror("Error", f"An error occurred: {e}")
 
 # Function to handle user registration
 def register():
