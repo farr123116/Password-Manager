@@ -161,7 +161,20 @@ def gomenu():
 
 # Function to close the program 
 def quit(): 
-    root.destroy() 
+    root.destroy()
+
+def show_help():
+    global current
+    if current == delete_frame:
+        Dhelp_label.config(text="username: usernames, password: Passwords, email: emails, website name: website_names, website url: url")
+    if current == change_frame:
+        Chelp_label.config(text="username: usernames, password: Passwords, email: emails, website name: website_names, website url: url")
+
+
+
+
+
+
 
 #adds the user's information to the database 
 def add(): 
@@ -170,19 +183,22 @@ def add():
 #pin check to check if they're pin is correct 
         pin = Apin_entry.get() 
         pincheck = cursor.execute(f"SELECT pins FROM MasterPasswords WHERE pins={pin}") 
-        pin2 = pincheck.fetchone() 
-        if pin2 is None: 
-            messagebox.showerror("Pin","pin is incorrect")
-            count=count-1 
-            Atries_label.config(text="You have " + str(count) + " chances left") 
-            
-            if count==0: 
+        pin2 = pincheck.fetchone()
 
-                messagebox.showerror("Count","you have no more chances left")
-            pin2 = pin2[0] 
-            pin2 = int(pin2) 
-            print(pin2) 
-            if int(pin) == pin2: 
+
+        if pin2 is None:
+            messagebox.showerror("Pin", "pin is incorrect")
+            count = count - 1
+            Stries_label.config(text="You have " + str(count) + " chances left")
+
+            if count == 0:
+                messagebox.showerror("Count", "you have no more chances left")
+
+        pin2 = pin2[0]
+        pin2 = int(pin2)
+        print(pin2)
+
+        if int(pin) == pin2:
                 messagebox.showinfo("Pin","pin is correct")
                 #gets the information typed into each entry and inserts ot into the Passwords table
                 website_name = AwebsiteName_entry.get() 
@@ -267,52 +283,56 @@ def delete():
     try: 
         pin = Dpin_entry.get() 
         pincheck = cursor.execute(f"SELECT pins FROM MasterPasswords WHERE pins={pin}") 
-        pin2 = pincheck.fetchone() 
-            
-        if pin2 is None: 
-            messagebox.showerror("Pin","pin is incorrect")
-            count=count-1 
-            Dtries_label.config(text="You have " + str(count) + " chances left") 
-                
-            if count==0: 
-                 messagebox.showerror("you have no more chances left") 
-            pin2 = pin2[0] 
-            pin2 = int(pin2) 
-            print(pin2) 
-            
-            if int(pin) == pin2: 
+        pin2 = pincheck.fetchone()
+
+        if pin2 is None:
+            messagebox.showerror("Pin", "pin is incorrect")
+            count = count - 1
+            Stries_label.config(text="You have " + str(count) + " chances left")
+
+            if count == 0:
+                messagebox.showerror("Count", "you have no more chances left")
+
+        pin2 = pin2[0]
+        pin2 = int(pin2)
+        print(pin2)
+
+        if int(pin) == pin2:
                 messagebox.showinfo("Pin","pin is correct")
             
             #searches through each catorgry the user can delete 
-                while True: 
-                    search = Dsearch_entry.get() 
-                    value = Dvalue_entry.get() 
+
+                search = Dsearch_entry.get()
+                value = Dvalue_entry.get()
                     
-                    if search == "username" or search == "password" or search == "email" or search == "website name" or search == "website url": 
-                        cursor.execute(f"SELECT * FROM Passwords WHERE {search}='{value}' AND pins={pin}") 
-                        results= cursor.fetchall() 
-                        print(results) 
-                        delete = messagebox.askyesno("Delete","is this the imformation you want to delete?")
+                if search == "usernames" or search == "Passwords" or search == "emails" or search == "website_names" or search == "url":
+                    cursor.execute(f"SELECT * FROM Passwords WHERE {search}='{value}' AND pins={pin}")
+                    results= cursor.fetchall()
+
+                    print(results)
+                    delete = messagebox.askyesno("Delete","is this the information you want to delete? (pin,password,username,email,website name, website url):"
+                                                          f"{results}")
                         
-                        if delete: 
-                            cursor.execute(f"DELETE FROM Passwords WHERE {search}='{value}' AND pins={pin}") 
+                    if delete:
+                        cursor.execute(f"DELETE FROM Passwords WHERE {search}='{value}' AND pins={pin}")
 
-                        else: 
+                    else:
 
-                             messagebox.showinfo("Main","you will go back to main page")
+                        messagebox.showinfo("Main","you will go back to main page")
 
-                             delete_frame.grid_forget()  
+                        delete_frame.grid_forget()
 
-                             main_frame.grid() 
+                        main_frame.grid()
 
-                    else: 
+                else:
 
-                        messagebox.showerror("Error","you can only delete username, password, email, website name, website url")
+                    messagebox.showerror("Error","you can only delete username, password, email, website name, website url")
 
-                        continue 
 
-    except: 
-            messagebox.showerror("Pin","pin is incorrect")
+
+
+    except Exception as e:
+            messagebox.showerror("Error", f"An error occurred: {e}")
             count=count-1 
             tries_label.config(text="You have "+ str(count)+ " tries left") 
             
@@ -325,37 +345,40 @@ def change():
     try: 
             pin = Cpin_entry.get() 
             pincheck = cursor.execute(f"SELECT pins FROM MasterPasswords WHERE pins={pin}") 
-            pin2 = pincheck.fetchone() 
-            
-            if pin2 is None: 
-                messagebox.showerror("Pin","pin is incorrect")
-                count=count-1 
-                Ctries_label.config(text="You have " + str(count) + " chances left") 
-                if count==0: 
-                    messagebox.showerror("Count","you have no more chances left")
-            pin2 = pin2[0] 
-            pin2 = int(pin2) 
-            print(pin2) 
+            pin2 = pincheck.fetchone()
+
+            if pin2 is None:
+                messagebox.showerror("Pin", "pin is incorrect")
+                count = count - 1
+                Stries_label.config(text="You have " + str(count) + " chances left")
+
+                if count == 0:
+                    messagebox.showerror("Count", "you have no more chances left")
+
+            pin2 = pin2[0]
+            pin2 = int(pin2)
+            print(pin2)
+
             if int(pin) == pin2: 
                 messagebox.showinfo("Pin","pin is correct")
-                while True: 
-                    search = Csearch_entry.get() 
-                    value = Cvalue_entry.get() 
-                    value1 = CNvalue_entry.get() 
-                    if search == "username" or search == "Passwords" or search == "email" or search == "website_name" or search == "url": 
-                        cursor.execute(f"SELECT * FROM Passwords WHERE {search}='{value}' AND pins={pin}") 
-                        results= cursor.fetchall() 
-                        print(results) 
-                        change = messagebox.askyesno("Change","is this the imformation you want to change?")
-                        if change == "yes": 
-                            cursor.execute(f"UPDATE Passwords SET {search}='{value1}' WHERE {search}='{value}' AND pins={pin}") 
-                            messagebox.showinfo("Change","information changed")
-                            change_frame.grid_forget() 
-                            main_frame.grid() 
+                search = Csearch_entry.get()
+                value = Cvalue_entry.get()
+                value1 = CNvalue_entry.get()
+                if search == "usernames" or search == "Passwords" or search == "emails" or search == "website_names" or search == "url":
+                    cursor.execute(f"SELECT * FROM Passwords WHERE {search}='{value}' AND pins={pin}")
+                    results= cursor.fetchall()
+                    print(results)
+                    change = messagebox.askyesno("Change","is this the information you want to change?(pin,password,username,email,website name, website url):"
+                                                          f"{results}")
+                    if change == "yes":
+                        cursor.execute(f"UPDATE Passwords SET {search}='{value1}' WHERE {search}='{value}' AND pins={pin}")
+                        messagebox.showinfo("Change","information changed")
+                        change_frame.grid_forget()
+                        main_frame.grid()
 
-                    else: 
-                        messagebox.showerror("Error","you can only change username, password, email, website name, website url")
-                        continue 
+                else:
+                    messagebox.showerror("Error","you can only change username, password, email, website name, website url")
+
 
     except: 
         messagebox.showerror("Pin","pin is incorrect")
@@ -888,19 +911,22 @@ Dvalue_label.grid(row=2, column=0, padx=5, pady=5)
 Dvalue_entry = tk.Entry(delete_frame)
 Dvalue_entry.grid(row=2, column=1, padx=5, pady=5)
 
-DNvalue_label = tk.Label(delete_frame, text= "New value:")
-DNvalue_label.grid(row=3, column=0, padx=5, pady=5)
-DNvalue_entry = tk.Entry(delete_frame)
-DNvalue_entry.grid(row=3, column=1, padx=5, pady=5)
-
 Dtries_label = tk.Label(delete_frame, text="")
 Dtries_label.grid(row=3, columnspan=2)
 
+# Create a button with a question mark emoji
+Dquestion_button = tk.Button(delete_frame, text="Search help❓", command=show_help)
+Dquestion_button.grid(row=4,column=0,padx=5,pady=5)
+
+# Label to display text when button is clicked
+Dhelp_label = tk.Label(delete_frame, text="",wraplength=300,justify="left")
+Dhelp_label.grid(row=5,column=0,columnspan=4,padx=5,pady=5)
+
 delete_button = tk.Button(delete_frame, text="Delete", command=delete)
-delete_button.grid(row=4, column=0, columnspan=1,padx=5, pady=5)
+delete_button.grid(row=6, column=0, columnspan=1,padx=5, pady=5)
 
 Dmenu = tk.Button(delete_frame, text="Main Menu", command=gomenu)
-Dmenu.grid(row=5, column=0, columnspan=1,padx=5, pady=5)
+Dmenu.grid(row=7, column=0, columnspan=1,padx=5, pady=5)
 
 #create change window
 change_frame = tk.Frame(root)
@@ -930,11 +956,20 @@ CNvalue_entry.grid(row=3, column=1, padx=5, pady=5)
 Ctries_label = tk.Label(change_frame, text="")
 Ctries_label.grid(row=4, columnspan=2)
 
+# Create a button with a question mark emoji
+Cquestion_button = tk.Button(change_frame, text="Search help❓", command=show_help)
+Cquestion_button.grid(row=5,column=0,padx=5,pady=5)
+
+# Label to display text when button is clicked
+Chelp_label = tk.Label(change_frame, text="",wraplength=300,justify="left")
+Chelp_label.grid(row=6,column=0,columnspan=4,padx=5,pady=5)
+
+
 change_button = tk.Button(change_frame, text="Change", command=change)
-change_button.grid(row=5, column=0, columnspan=1,padx=5, pady=5)
+change_button.grid(row=7, column=0, columnspan=1,padx=5, pady=5)
 
 Cmenu = tk.Button(change_frame, text="Main Menu", command=gomenu)
-Cmenu.grid(row=6, column=0, columnspan=1,padx=5, pady=5)
+Cmenu.grid(row=8, column=0, columnspan=1,padx=5, pady=5)
 
 #create generate window
 generate_frame = tk.Frame(root)
