@@ -304,30 +304,37 @@ def delete():
 
                 search = Dsearch_entry.get()
                 value = Dvalue_entry.get()
-                    
-                if search == "usernames" or search == "Passwords" or search == "emails" or search == "website_names" or search == "url":
-                    cursor.execute(f"SELECT * FROM Passwords WHERE {search}='{value}' AND pins={pin}")
-                    results= cursor.fetchall()
 
-                    print(results)
-                    delete = messagebox.askyesno("Delete","is this the information you want to delete? (pin,password,username,email,website name, website url):"
-                                                          f"{results}")
-                        
-                    if delete:
-                        cursor.execute(f"DELETE FROM Passwords WHERE {search}='{value}' AND pins={pin}")
+                valid_fields = ["usernames", "Passwords", "emails", "website_names", "url"]
+                if search not in valid_fields:
+                    messagebox.showerror("Error",
+                                         "You can only delete username, password, email, website name, website url")
+                    return
 
-                    else:
+                query = f"SELECT rowid, * FROM Passwords WHERE {search} = ? AND pins = ?"
+                cursor.execute(query, (value, pin))
+                results = cursor.fetchall()
 
-                        messagebox.showinfo("Main","you will go back to main page")
+                if not results:
+                    messagebox.showinfo("Result", "No matching entries found.")
+                    return
 
-                        delete_frame.grid_forget()
+                updated = False
 
-                        main_frame.grid()
+                for row in results:
+                    # Displaying each result to confirm deletion
+                    confirm = messagebox.askyesno("Delete", f"Do you want to delete this entry?\n\n{row}")
+                    if confirm:
+                        rowid = row[0]
+                        # Assuming the row has a unique ID or full fields match
+                        cursor.execute(f"DELETE FROM Passwords WHERE rowid = ?", (rowid,))
+                        con.commit()
+                        messagebox.showinfo("Deleted", "Entry deleted successfully.")
+                        updated = True
+                        break
 
-                else:
-
-                    messagebox.showerror("Error","you can only delete username, password, email, website name, website url")
-
+                if not updated:
+                    messagebox.showinfo("Done", "No changes were made. No more matching entries.")
 
 
 
@@ -363,21 +370,37 @@ def change():
                 messagebox.showinfo("Pin","pin is correct")
                 search = Csearch_entry.get()
                 value = Cvalue_entry.get()
-                value1 = CNvalue_entry.get()
-                if search == "usernames" or search == "Passwords" or search == "emails" or search == "website_names" or search == "url":
-                    cursor.execute(f"SELECT * FROM Passwords WHERE {search}='{value}' AND pins={pin}")
-                    results= cursor.fetchall()
-                    print(results)
-                    change = messagebox.askyesno("Change","is this the information you want to change?(pin,password,username,email,website name, website url):"
-                                                          f"{results}")
-                    if change == "yes":
-                        cursor.execute(f"UPDATE Passwords SET {search}='{value1}' WHERE {search}='{value}' AND pins={pin}")
-                        messagebox.showinfo("Change","information changed")
-                        change_frame.grid_forget()
-                        main_frame.grid()
+                new_value = CNvalue_entry.get()
 
-                else:
-                    messagebox.showerror("Error","you can only change username, password, email, website name, website url")
+                valid_fields = ["usernames", "Passwords", "emails", "website_names", "url"]
+                if search not in valid_fields:
+                    messagebox.showerror("Error",
+                                         "You can only change username, password, email, website name, website url")
+                    return
+
+                query = f"SELECT rowid, * FROM Passwords WHERE {search} = ? AND pins = ?"
+                cursor.execute(query, (value, pin))
+                results = cursor.fetchall()
+                updated = False
+
+                if not results:
+                    messagebox.showinfo("Result", "No matching entries found.")
+                    return
+
+                for row in results:
+                    confirm = messagebox.askyesno("Change", f"Do you want to change this entry?\n\n{row}")
+                    if confirm:
+                        rowid = row[0]
+                        cursor.execute(f"UPDATE Passwords SET {search}=? WHERE rowid=?", (new_value, rowid))
+                        con.commit()
+                        messagebox.showinfo("Change", "Information changed successfully.")
+                        updated = True
+                        break
+
+                if not updated:
+                    messagebox.showinfo("Done", "No changes were made. No more matching entries.")
+
+
 
 
     except: 
