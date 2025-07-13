@@ -1,5 +1,6 @@
 import tkinter as tk 
-from tkinter import messagebox 
+from tkinter import messagebox
+from tkinter import simpledialog
 import sqlite3 
 import random 
 import string 
@@ -130,12 +131,7 @@ def gosettings():
     current = settings_frame
     settings_frame.grid()
 
-# Function to switch to view profile frame 
-def goviewP(): 
-    settings_frame.grid_forget() 
-    global current
-    current = viewP_frame
-    viewP_frame.grid() 
+# Function to switch to view profile frame
 
 # Function to switch to edit profile frame 
 def goeditP(): 
@@ -170,6 +166,54 @@ def show_help():
     if current == change_frame:
         Chelp_label.config(text="username: usernames, password: Passwords, email: emails, website name: website_names, website url: url")
 
+def show_password():
+    try:
+        pin = simpledialog.askstring("Input", "Please enter your email:")
+        pincheck = cursor.execute(f"SELECT pins FROM MasterPasswords WHERE pins={pin}")
+        pin2 = pincheck.fetchone()
+
+        if pin2 is None:
+            messagebox.showerror("Pin", "pin is incorrect")
+
+        pin2 = pin2[0]
+        pin2 = int(pin2)
+        print(pin2)
+
+        if int(pin) == pin2:
+            cursor.execute(f"SELECT masterPassword FROM MasterPasswords WHERE pins={pin}")
+            Mpassword = cursor.fetchone()
+            if Mpassword:
+                Mpassword = Mpassword[0]
+                Vpassword_label.config(text=f"Password: {Mpassword}")
+
+
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {e}")
+
+
+def show_hint():
+    try:
+        pin = simpledialog.askstring("Input", "Please enter your email:")
+        pincheck = cursor.execute(f"SELECT pins FROM MasterPasswords WHERE pins={pin}")
+        pin2 = pincheck.fetchone()
+
+        if pin2 is None:
+            messagebox.showerror("Pin", "pin is incorrect")
+
+        pin2 = pin2[0]
+        pin2 = int(pin2)
+        print(pin2)
+
+        if int(pin) == pin2:
+            cursor.execute(f"SELECT hint FROM MasterPasswords WHERE pins={pin}")
+            hint = cursor.fetchone()
+            if hint:
+                hint = hint[0]
+                Vhint_label.config(text=f"Hint: {hint}")
+
+
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {e}")
 
 
 
@@ -576,23 +620,34 @@ def strength_test():
             strength_frame.grid_forget() 
 
 #shows the user's profile details 
-def viewP(): 
-    try: 
-                while True: 
-                    search = Esearch_entry.get() 
-                    value = Evalue_entry.get() 
-                    value1 = ENvalue_entry.get() 
+def viewP():
+    global count
+    settings_frame.grid_forget()
+    global current
+    current = viewP_frame
+    viewP_frame.grid()
+    try:
+        pin = pin_entry.get()
 
-                    if search == "username" or search == "Passwords" or search == "email" or search == "website_name" or search == "url": 
-                        cursor.execute(f"SELECT * FROM Passwords WHERE {search}='{value}'") 
-                        results= cursor.fetchall() 
-                        messagebox.showinfo(results) 
-                        viewP_frame.grid_forget() 
-                        main_frame.grid()                         
+        # Use parameterized query to avoid SQL injection
+        cursor.execute("SELECT pins, usernames, masterPassword, email, hint FROM MasterPasswords WHERE pins = ?", (pin,))
+        result = cursor.fetchone()
 
-                    else: 
-                        messagebox.showerror("Error","you can only change username, password, email, website name, website url")
-                        continue
+        if result:
+            pin2, username, MPassword, email, hint = result
+
+            if int(pin) == int(pin2):
+
+                Vusername_label.config(text= f"username: {username}")
+                Vpassword_label.config(text= f"Password: *****")
+                Vemail_label.config(text= f"email: {email}")
+                Vhint_label.config(text= f"hint: *****")
+            else:
+                messagebox.showerror("Error", "PIN is incorrect")
+        else:
+            messagebox.showerror("Error", "PIN not found")
+
+
 
 
     except Exception as e:
@@ -647,8 +702,10 @@ def deleteP():
             print(pin2) 
             if int(pin) == pin2: 
                 messagebox.showinfo("Pin","pin is correct")
+                messagebox.askyesno("Confirm", "Are you sure you want to delete your account")
                 # Delete record from passwords table and closes teh tkinter window 
                 cursor.execute(f"DELETE FROM MasterPasswords WHERE pins={pin}")
+                con.commit()
                 messagebox.showinfo("Delete","profile deleted successfully")
                 root.destroy()
 
@@ -1088,7 +1145,8 @@ settings_frame = tk.Frame(root)
 settings_frame.grid(padx=10, pady=10)
 settings_frame.grid_forget()
 
-viewProfile_button = tk.Button(settings_frame, text="View Profiles", command=goviewP)
+
+viewProfile_button = tk.Button(settings_frame, text="View Profiles", command=viewP)
 viewProfile_button.grid(row=0, column=0, columnspan=1,padx=5, pady=5)
 
 editProfile_button = tk.Button(settings_frame, text="Edit Profile", command=goeditP)
@@ -1105,16 +1163,26 @@ viewP_frame = tk.Frame(root)
 viewP_frame.grid(padx=10, pady=10)
 viewP_frame.grid_forget()
 
-Vsearch_label = tk.Label(viewP_frame, text="Search:")
-Vsearch_label.grid(row=1, column=0, padx=5, pady=5)
-Vsearch_entry = tk.Entry(viewP_frame)
-Vsearch_entry.grid(row=1, column=1, padx=5, pady=5)
+Vusername_label = tk.Label(viewP_frame, text="")
+Vusername_label.grid(row=0, column=0, padx=5, pady=5)
 
-viewP_button = tk.Button(viewP_frame, text="View", command=viewP)
-viewP_button.grid(row=2, column=0, columnspan=1,padx=5, pady=5)
+Vpassword_label = tk.Label(viewP_frame, text="")
+Vpassword_label.grid(row=1, column=0, padx=5, pady=5)
+
+Vpassword_button = tk.Button(viewP_frame, text="Show", command =show_password)
+Vpassword_button.grid(row=1, column=1, columnspan =1, padx=5, pady=5)
+
+Vemail_label = tk.Label(viewP_frame, text="")
+Vemail_label.grid(row=2, column=0, padx=5, pady=5)
+
+Vhint_label = tk.Label(viewP_frame, text="")
+Vhint_label.grid(row=3, column=0, padx=5, pady=5)
+
+Vhint_button = tk.Button(viewP_frame, text="Show", command =show_hint)
+Vhint_button.grid(row=3, column = 1, columnspan =1, padx=5, pady =5)
 
 Vsettings = tk.Button(viewP_frame, text="Settings", command=gosettings)
-Vsettings.grid(row=3, column=0, columnspan=1,padx=5, pady=5)
+Vsettings.grid(row=4, column=0, columnspan=1,padx=5, pady=5)
 
 #create edit profiles window
 editP_frame = tk.Frame(root)
