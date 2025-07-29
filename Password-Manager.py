@@ -131,15 +131,6 @@ def gosettings():
     current = settings_frame
     settings_frame.grid()
 
-# Function to switch to view profile frame
-
-# Function to switch to edit profile frame 
-def goeditP(): 
-    settings_frame.grid_forget() 
-    global current
-    current = editP_frame 
-    editP_frame.grid() 
-
 # Function to switch to delete profile frame 
 def godeleteP(): 
      settings_frame.grid_forget() 
@@ -166,9 +157,10 @@ def show_help():
     if current == change_frame:
         Chelp_label.config(text="username: usernames, password: Passwords, email: emails, website name: website_names, website url: url")
 
+
 def show_password():
     try:
-        pin = simpledialog.askstring("Input", "Please enter your email:")
+        pin = simpledialog.askstring("Input", "Please enter your pin:")
         pincheck = cursor.execute(f"SELECT pins FROM MasterPasswords WHERE pins={pin}")
         pin2 = pincheck.fetchone()
 
@@ -193,7 +185,7 @@ def show_password():
 
 def show_hint():
     try:
-        pin = simpledialog.askstring("Input", "Please enter your email:")
+        pin = simpledialog.askstring("Input", "Please enter your pin:")
         pincheck = cursor.execute(f"SELECT pins FROM MasterPasswords WHERE pins={pin}")
         pin2 = pincheck.fetchone()
 
@@ -215,9 +207,134 @@ def show_hint():
     except Exception as e:
         messagebox.showerror("Error", f"An error occurred: {e}")
 
+def edit_username():
+    try:
+        pin = simpledialog.askstring("Input", "Please enter your pin:")
+        pincheck = cursor.execute(f"SELECT pins FROM MasterPasswords WHERE pins={pin}")
+        pin2 = pincheck.fetchone()
 
+        if pin2 is None:
+            messagebox.showerror("Pin", "pin is incorrect")
 
+        pin2 = pin2[0]
+        pin2 = int(pin2)
+        print(pin2)
 
+        if int(pin) == pin2:
+            cursor.execute(f"SELECT usernames FROM MasterPasswords WHERE pins={pin}")
+            username = cursor.fetchone()
+            if username:
+                username = username[0]
+                confirm = messagebox.askyesno("Confirm",f"Do you want to edit your username: {username}?")
+                if confirm:
+                    new_value = simpledialog.askstring("Input", "Please enter your new value:")
+                    cursor.execute(f"UPDATE MasterPasswords SET usernames=? WHERE pins = ?", (new_value, pin))
+                    con.commit()
+                    messagebox.showinfo("Edit", "Information edits successfully.")
+                    Eusername_label.config(text=f"Username: {new_value}")
+
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {e}")
+
+def edit_password():
+    try:
+        pin = simpledialog.askstring("Input", "Please enter your pin:")
+        pincheck = cursor.execute(f"SELECT pins FROM MasterPasswords WHERE pins={pin}")
+        pin2 = pincheck.fetchone()
+
+        if pin2 is None:
+            messagebox.showerror("Pin", "pin is incorrect")
+
+        pin2 = pin2[0]
+        pin2 = int(pin2)
+        print(pin2)
+
+        if int(pin) == pin2:
+            cursor.execute(f"SELECT masterPassword FROM MasterPasswords WHERE pins={pin}")
+            password = cursor.fetchone()
+            if password:
+                password = password[0]
+                confirm = messagebox.askyesno("Confirm",f"Do you want to edit your password: {password}?")
+                if confirm:
+                    new_value = simpledialog.askstring("Input", "Please enter your new value:")
+                    if new_value.isalnum() == True:
+                        messagebox.showerror("Error", "Password must have special characters")
+                        return
+
+                    if not (len(new_value) > 7):
+                        messagebox.showerror("Error", "Password must have 7 or more characters")
+                        return
+
+                    if any(chr.isdigit() for chr in new_value) == False:
+                        messagebox.showerror("Error", "Password must have numbers")
+                        return
+                    cursor.execute(f"UPDATE MasterPasswords SET masterPassword=? WHERE pins = ?", (new_value, pin))
+                    con.commit()
+                    messagebox.showinfo("Edit", "Information edits successfully.")
+
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {e}")
+
+def edit_email():
+    try:
+        pin = simpledialog.askstring("Input", "Please enter your pin:")
+        pincheck = cursor.execute(f"SELECT pins FROM MasterPasswords WHERE pins={pin}")
+        pin2 = pincheck.fetchone()
+
+        if pin2 is None:
+            messagebox.showerror("Pin", "pin is incorrect")
+
+        pin2 = pin2[0]
+        pin2 = int(pin2)
+        print(pin2)
+
+        if int(pin) == pin2:
+            cursor.execute(f"SELECT email FROM MasterPasswords WHERE pins={pin}")
+            email = cursor.fetchone()
+            if email:
+                email = email[0]
+                confirm = messagebox.askyesno("Confirm",f"Do you want to edit your username: {email}?")
+                if confirm:
+                    new_value = simpledialog.askstring("Input", "Please enter your new value:")
+                    if '@' not in email:
+                        messagebox.showerror("Error", "Invalid Email")
+                        return
+                    cursor.execute(f"UPDATE MasterPasswords SET email=? WHERE pins = ?", (new_value, pin))
+                    con.commit()
+                    messagebox.showinfo("Edit", "Information edits successfully.")
+                    Eemail_label.config(text=f"Email: {new_value}")
+
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {e}")
+
+def edit_hint():
+    try:
+        pin = simpledialog.askstring("Input", "Please enter your pin:")
+        pincheck = cursor.execute(f"SELECT pins FROM MasterPasswords WHERE pins={pin}")
+        pin2 = pincheck.fetchone()
+
+        if pin2 is None:
+            messagebox.showerror("Pin", "pin is incorrect")
+
+        pin2 = pin2[0]
+        pin2 = int(pin2)
+        print(pin2)
+
+        if int(pin) == pin2:
+            cursor.execute(f"SELECT hint FROM MasterPasswords WHERE pins={pin}")
+            hint = cursor.fetchone()
+            if hint:
+                hint = hint[0]
+                confirm = messagebox.askyesno("Confirm",f"Do you want to edit your hint: {hint}?")
+                if confirm:
+                    new_value = simpledialog.askstring("Input", "Please enter your new value:")
+                    cursor.execute(f"UPDATE MasterPasswords SET usernames=? WHERE pins = ?", (new_value, pin))
+                    con.commit()
+                    messagebox.showinfo("Edit", "Information edits successfully.")
+                    Ehint_label.config(text=f"Hint: {new_value}")
+
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {e}")
 
 
 #adds the user's information to the database 
@@ -414,7 +531,6 @@ def change():
                 messagebox.showinfo("Pin","pin is correct")
                 search = Csearch_entry.get()
                 value = Cvalue_entry.get()
-                new_value = CNvalue_entry.get()
 
                 valid_fields = ["usernames", "Passwords", "emails", "website_names", "url"]
                 if search not in valid_fields:
@@ -434,6 +550,7 @@ def change():
                 for row in results:
                     confirm = messagebox.askyesno("Change", f"Do you want to change this entry?\n\n{row}")
                     if confirm:
+                        new_value = simpledialog.askstring("New value", "Enter the new value:")
                         rowid = row[0]
                         cursor.execute(f"UPDATE Passwords SET {search}=? WHERE rowid=?", (new_value, rowid))
                         con.commit()
@@ -638,10 +755,10 @@ def viewP():
 
             if int(pin) == int(pin2):
 
-                Vusername_label.config(text= f"username: {username}")
+                Vusername_label.config(text= f"Username: {username}")
                 Vpassword_label.config(text= f"Password: *****")
-                Vemail_label.config(text= f"email: {email}")
-                Vhint_label.config(text= f"hint: *****")
+                Vemail_label.config(text= f"Email: {email}")
+                Vhint_label.config(text= f"Hint: *****")
             else:
                 messagebox.showerror("Error", "PIN is incorrect")
         else:
@@ -654,34 +771,39 @@ def viewP():
         messagebox.showerror("Error", f"An error occurred: {e}")
  
 #changes the profile details 
-def editP(): 
-    while True: 
-        try: 
-                    search = Esearch_entry.get() 
-                    value = Evalue_entry.get() 
-                    value1 = ENvalue_entry.get() 
+def editP():
+    settings_frame.grid_forget()
+    global current
+    current = editP_frame
+    editP_frame.grid()
+    try:
+        pin = pin_entry.get()
 
-                    if search == "username" or search == "Passwords" or search == "email" or search == "website_name" or search == "url": 
-                        cursor.execute(f"SELECT * FROM Passwords WHERE {search}='{value}'") 
-                        results= cursor.fetchall() 
-                        print(results) 
-                        
-                        change = messagebox.askyesno("Edit","is this the imformation you want to change?")
-                        if change == "yes": 
-                            cursor.execute(f"UPDATE Passwords SET {search}='{value1}' WHERE {search}='{value}'") 
-                            messagebox.showinfo("Edit","information changed")
-                            change_frame.grid_forget() 
-                            main_frame.grid() 
+        # Use parameterized query to avoid SQL injection
+        cursor.execute("SELECT pins, usernames, masterPassword, email, hint FROM MasterPasswords WHERE pins = ?",
+                           (pin,))
+        result = cursor.fetchone()
 
-                    else: 
-                        messagebox.showerror("Error","you can only change username, password, email, website name, website url")
-                        continue
+        if result:
+            pin2, username, MPassword, email, hint = result
+
+            if int(pin) == int(pin2):
+                Eusername_label.config(text=f"Username: {username}")
+                Epassword_label.config(text=f"Password: *****")
+                Eemail_label.config(text=f"Email: {email}")
+                Ehint_label.config(text=f"Hint: *****")
+
+            else:
+                messagebox.showerror("Error", "PIN is incorrect")
+        else:
+            messagebox.showerror("Error", "PIN not found")
 
 
-        except Exception as e:
 
-            messagebox.showerror("Error", f"An error occurred: {e}")
-             
+
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {e}")
+
  
 def deleteP(): 
     global count
@@ -741,6 +863,10 @@ def register():
         return
     if ConfirmMPassword != MPassword:
         messagebox.showerror("Error", "Passwords do not match")
+        return
+
+    if any(chr.isdigit() for chr in MPassword)==False:
+        messagebox.showerror("Error", "Password must have numbers")
         return
 
     if len(pin) != 4 or not pin.isdigit():
@@ -1028,28 +1154,23 @@ Cvalue_label.grid(row=2, column=0, padx=5, pady=5)
 Cvalue_entry = tk.Entry(change_frame)
 Cvalue_entry.grid(row=2, column=1, padx=5, pady=5)
 
-CNvalue_label = tk.Label(change_frame, text= "New value:")
-CNvalue_label.grid(row=3, column=0, padx=5, pady=5)
-CNvalue_entry = tk.Entry(change_frame)
-CNvalue_entry.grid(row=3, column=1, padx=5, pady=5)
-
 Ctries_label = tk.Label(change_frame, text="")
-Ctries_label.grid(row=4, columnspan=2)
+Ctries_label.grid(row=3, columnspan=2)
 
 # Create a button with a question mark emoji
 Cquestion_button = tk.Button(change_frame, text="Search help❓", command=show_help)
-Cquestion_button.grid(row=5,column=0,padx=5,pady=5)
+Cquestion_button.grid(row=4,column=0,padx=5,pady=5)
 
 # Label to display text when button is clicked
 Chelp_label = tk.Label(change_frame, text="",wraplength=300,justify="left")
-Chelp_label.grid(row=6,column=0,columnspan=4,padx=5,pady=5)
+Chelp_label.grid(row=5,column=0,columnspan=4,padx=5,pady=5)
 
 
 change_button = tk.Button(change_frame, text="Change", command=change)
-change_button.grid(row=7, column=0, columnspan=1,padx=5, pady=5)
+change_button.grid(row=6, column=0, columnspan=1,padx=5, pady=5)
 
 Cmenu = tk.Button(change_frame, text="Main Menu", command=gomenu)
-Cmenu.grid(row=8, column=0, columnspan=1,padx=5, pady=5)
+Cmenu.grid(row=7, column=0, columnspan=1,padx=5, pady=5)
 
 #create generate window
 generate_frame = tk.Frame(root)
@@ -1149,7 +1270,7 @@ settings_frame.grid_forget()
 viewProfile_button = tk.Button(settings_frame, text="View Profiles", command=viewP)
 viewProfile_button.grid(row=0, column=0, columnspan=1,padx=5, pady=5)
 
-editProfile_button = tk.Button(settings_frame, text="Edit Profile", command=goeditP)
+editProfile_button = tk.Button(settings_frame, text="Edit Profile", command=editP)
 editProfile_button.grid(row=1, column=0, columnspan=1,padx=5, pady=5)
 
 deleteProfile_button = tk.Button(settings_frame, text="Delete Profile", command=godeleteP)
@@ -1189,26 +1310,32 @@ editP_frame = tk.Frame(root)
 editP_frame.grid(padx=10, pady=10)
 editP_frame.grid_forget()
 
-Esearch_label = tk.Label(editP_frame, text="Search:")
-Esearch_label.grid(row=1, column=0, padx=5, pady=5)
-Esearch_entry = tk.Entry(editP_frame)
-Esearch_entry.grid(row=1, column=1, padx=5, pady=5)
+Eusername_label = tk.Label(editP_frame,text="")
+Eusername_label.grid(row=0, column =0, padx =5, pady =5)
 
-Evalue_label = tk.Label(editP_frame, text= "value you want to change:")
-Evalue_label.grid(row=2, column=0, padx=5, pady=5)
-Evalue_entry = tk.Entry(editP_frame)
-Evalue_entry.grid(row=2, column=1, padx=5, pady=5)
+Epassword_label = tk.Label(editP_frame, text= "")
+Epassword_label.grid(row=1, column=0, padx=5, pady=5)
 
-ENvalue_label = tk.Label(editP_frame, text= "New value:")
-ENvalue_label.grid(row=3, column=0, padx=5, pady=5)
-ENvalue_entry = tk.Entry(editP_frame)
-ENvalue_entry.grid(row=3, column=1, padx=5, pady=5)
+Eemail_label = tk.Label(editP_frame, text="")
+Eemail_label.grid(row=2)
 
-editP_button = tk.Button(editP_frame, text="Edit", command=editP)
-editP_button.grid(row=4, column=0, columnspan=1,padx=5, pady=5)
+Ehint_label = tk.Label(editP_frame, text="")
+Ehint_label.grid(row=3, column=0, padx=5, pady=5)
+
+username_editP_button = tk.Button(editP_frame, text="Edit", command=edit_username)
+username_editP_button.grid(row=0, column=1, columnspan=1,padx=5, pady=5)
+
+password_editP_button = tk.Button(editP_frame, text="Edit", command=edit_password)
+password_editP_button.grid(row=1, column=1, columnspan=1,padx=5, pady=5)
+
+email_editP_button = tk.Button(editP_frame, text="Edit", command=edit_email)
+email_editP_button.grid(row=2, column=1, columnspan=1,padx=5, pady=5)
+
+hint_editP_button = tk.Button(editP_frame, text="Edit", command=edit_hint)
+hint_editP_button.grid(row=3, column=1, columnspan=1,padx=5, pady=5)
 
 Esettings = tk.Button(editP_frame, text="Settings", command=gosettings)
-Esettings.grid(row=5, column=0, columnspan=1,padx=5, pady=5)
+Esettings.grid(row=4, column=0, columnspan=1,padx=5, pady=5)
 
 #delete profile window
 deleteP_frame = tk.Frame(root)
