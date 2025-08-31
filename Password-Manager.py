@@ -54,10 +54,11 @@ cursor.execute(Settings)
 
 # Function to switch to login frame 
 
+count = 3
+
 def gologin(): 
     LorR_frame.grid_forget() 
-    global count 
-    count = 3 
+    global count
     login_frame.grid() 
 
 #function to go back to the login or register option from the login window
@@ -109,6 +110,8 @@ def gogenerate():
     main_frame.grid_forget() 
     global count 
     count = 3
+    include_numbers.set(True)
+    include_special.set(True)
     global current
     current = generate_frame
     generate_frame.grid() 
@@ -336,8 +339,49 @@ def edit_hint():
     except Exception as e:
         messagebox.showerror("Error", f"An error occurred: {e}")
 
+def help_stength() :
+    try:
+        pin = Spin_entry.get()
+        pwd=pwd_entry.get()
+        if pin.strip() == "":
+            messagebox.showerror("Error", "No Pin")
+            return
 
-#adds the user's information to the database 
+        if pwd.strip() == "":
+            messagebox.showerror("Error","No Password")
+            return
+        if len(pwd) >= 8:
+            # checks if the password has at least one uppercase letter and lowercase
+            if any(chr.islower() for chr in pwd) == True and any(chr.isupper() for chr in pwd) == True:
+                # checks if the password has at least one digit
+                if any(chr.isdigit() for chr in pwd) == True:
+                    # checks if the password has at least one special character
+                    if pwd.isalnum() == False:
+                        messagebox.showinfo("")
+                        return
+
+
+                    else:
+                        messagebox.showinfo("Hint","Add special characters")
+
+                else:
+                    messagebox.showinfo("Hint", "Add special characters\nAdd Numbers")
+
+            else:
+                messagebox.showinfo("Hint", "Add special characters\n"
+                                            "Add Numbers\n"
+                                            "Add lower and upper case letter")
+
+        else:
+            messagebox.showinfo("Hint","Add special characters\n"
+        "Add numbers\n"
+        "Add lower and upper case letters\n"
+        "Make sure password is at least a length of 7")
+
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {e}")
+
+#adds the user's information to the database
 def add(): 
     global count 
     try: 
@@ -574,7 +618,7 @@ def change():
 
 # Function to handle generating passwords 
 def generate(): 
-    global count 
+    global count
     try: 
             pin = Gpin_entry.get() 
             pincheck = cursor.execute(f"SELECT pins FROM MasterPasswords WHERE pins={pin}") 
@@ -598,9 +642,9 @@ def generate():
                 letters = string.ascii_letters 
                 digits = string.digits 
                 special = string.punctuation 
-                characters = letters 
-                numbers = messagebox.askyesno("Number", "Would you like to include numbers?") 
-                special_character = messagebox.askyesno("Special Character", "Would you like to include special characters?") 
+                characters = letters
+                numbers = include_numbers.get()
+                special_character = include_special.get()
 
                 if numbers: 
                     characters += digits 
@@ -638,6 +682,8 @@ def generate():
                 # Ask user if they want to add the generated password to their account 
                 add = messagebox.askyesno("Add Password", "Do you want to add this password to your account?") 
                 if add:
+                    global current
+                    current = addfrom_frame
                     addfrom_frame.grid()
                     AFpassword_entry.insert(0, pwd)
                     AFpin_entry.insert(0, pin)
@@ -691,6 +737,8 @@ def strength_test():
                                 messagebox.showinfo("valid Password","Password strength: Strong")
                                 add = messagebox.askyesno("Add","do you want to add this password to your account yes or no")
                                 if add == "yes":
+                                    global current
+                                    current = addfrom_frame
                                     addfrom_frame.grid()
                                     AFpassword_entry.insert(0, pwd)
                                     AFpin_entry.insert(0, pin)
@@ -708,7 +756,8 @@ def strength_test():
                                 else:
                                     add = messagebox.askyesno("Add","do you want to add this password to your account yes or no")
 
-                                    if add == "yes": 
+                                    if add == "yes":
+                                        current = addfrom_frame
                                         addfrom_frame.grid()
                                         AFpassword_entry.insert(0,pwd)
                                         AFpin_entry.insert(0,pin)
@@ -729,12 +778,9 @@ def strength_test():
                     messagebox.showerror("Invalid Password","password too weak. Make a new one")
 
 
-    except: 
-        messagebox.showerror("Pin","pin is incorrect")
-        count=count-1 
-        tries_label.config(text="You have "+ str(count)+ " tries left") 
-        if count==0: 
-            strength_frame.grid_forget() 
+
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {e}")
 
 #shows the user's profile details 
 def viewP():
@@ -1196,6 +1242,15 @@ generated.grid(row=4,column=0, columnspan=2)
 generate_button = tk.Button(generate_frame, text="Generate", command=generate)
 generate_button.grid(row=3, column=0, columnspan=1,padx=5, pady=5)
 
+include_numbers = tk.BooleanVar()
+include_special = tk.BooleanVar()
+
+numbers_check = tk.Checkbutton(generate_frame, text="Include Numbers", variable=include_numbers)
+special_check = tk.Checkbutton(generate_frame, text="Include Special Characters", variable=include_special)
+
+numbers_check.grid(row=2, column=1, sticky="w")  # Replace X, Y with proper layout
+special_check.grid(row=3, column=1, sticky="w")
+
 Gmenu = tk.Button(generate_frame, text="Main Menu", command=gomenu)
 Gmenu.grid(row=5, column=0, columnspan=1,padx=5, pady=5)
 
@@ -1217,11 +1272,15 @@ pwd_entry.grid(row=1, column=1, padx=5)
 Stries_label = tk.Label(strength_frame, text="")
 Stries_label.grid(row=2, columnspan=2)
 
+
 strength_button = tk.Button(strength_frame, text="Check Strength", command=strength_test)
 strength_button.grid(row=3, column=1, columnspan=1,padx=5, pady=5)
 
+Shelp_strength = tk.Button(strength_frame, text="Help", command=help_stength)
+Shelp_strength.grid(row=4, column=1, columnspan=1, padx=5, pady=5)
+
 Smenu = tk.Button(strength_frame, text="Main Menu", command=gomenu)
-Smenu.grid(row=4, column=1, columnspan=1,padx=5, pady=5)
+Smenu.grid(row=5, column=1, columnspan=1,padx=5, pady=5)
 
 # create addfrom window
 addfrom_frame = tk.Frame(root)
@@ -1260,6 +1319,9 @@ AFwebsiteName_entry.grid(row=5, column=1, padx=5, pady=5)
 
 addfrom_button = tk.Button(addfrom_frame, text="Add", command=addfrom)
 addfrom_button.grid(row=6, column=1, columnspan=1,padx=5, pady=5)
+
+AFmenu = tk.Button(addfrom_frame, text="Main Menu", command=gomenu)
+AFmenu.grid(row=6, column=0, columnspan=1,padx=5, pady=5)
 
 #create settings window
 settings_frame = tk.Frame(root)
